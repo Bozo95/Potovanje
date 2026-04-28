@@ -35,11 +35,10 @@
 
     .search-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:28px 32px;margin-bottom:28px;box-shadow:var(--shadow)}
     .sg{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:16px;align-items:end}
-    @media(max-width:768px){.sg{grid-template-columns:1fr}}
     .field{display:flex;flex-direction:column;gap:8px}
     .field label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
     .field label i{margin-right:6px;color:var(--primary-light)}
-    .field input{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--text);font-size:15px;font-family:'Inter',sans-serif;outline:none;width:100%;transition:all .2s}
+    .field input{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--text);font-size:15px;font-family:'Inter',sans-serif;outline:none;width:100%;min-width:0;box-sizing:border-box;transition:all .2s}
     .field input:focus{border-color:var(--primary);background:var(--surface3);box-shadow:0 0 0 3px rgba(108,99,255,.15)}
     /* AUTOCOMPLETE */
     .ac-wrap{position:relative}
@@ -53,7 +52,8 @@
     .ac-city{font-weight:700;font-size:14px}
     .ac-meta{font-size:12px;color:var(--text-muted);margin-top:1px}
     .field input::placeholder{color:var(--text-muted)}
-    .field input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.6);cursor:pointer}
+    input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none}
+    .field input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.6);cursor:pointer;flex-shrink:0}
     .btn-go{background:linear-gradient(135deg,var(--primary),var(--primary-light));border:none;border-radius:12px;padding:14px 28px;color:white;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 4px 15px rgba(108,99,255,.35);font-family:'Inter',sans-serif}
     .btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(108,99,255,.45)}
 
@@ -92,7 +92,7 @@
     .w-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
     .w-badge.fc{background:rgba(67,198,172,.15);color:var(--accent)}
     .w-badge.hi{background:rgba(251,191,36,.15);color:#fbbf24}
-    .w-links{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .w-links{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:1;flex-wrap:wrap}
     .w-ext{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--text-muted);text-decoration:none;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:5px 11px;transition:all .2s;white-space:nowrap}
     .w-ext:hover{color:var(--text);border-color:var(--primary);background:var(--surface2)}
     .wg{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px}
@@ -270,58 +270,93 @@
        MOBILE — do 768px
     ══════════════════════════════ */
     @media(max-width:768px){
+      /* Layout */
       .wrap{padding:0 14px}
       header{padding:20px 0 14px}
-      /* Home button: premakni pod naslov (ne več absolutno) */
-      .btn-home{position:static;margin:10px auto 0;justify-content:center;font-size:12px;padding:8px 16px}
-      .search-card{padding:20px 16px;border-radius:18px;margin-bottom:20px}
-      .btn-go{width:100%;justify-content:center}
-      /* Destination hero */
+
+      /* Gumb Domov: iz absolute v normalen flow pod naslovom */
+      .btn-home{position:static;display:none;width:fit-content;
+                margin:10px auto 0;justify-content:center;font-size:12px;padding:8px 16px}
+      .btn-home.show{display:flex}
+
+      /* ── ISKANJE ──────────────────────────────────
+         Zamenjamo grid z flex-column — bolj zanesljivo
+         na iOS Safari in Android browsers             */
+      /* Iskalna kartica: skrijemo vsak overflow */
+      .search-card{padding:18px 14px;border-radius:18px;margin-bottom:20px;overflow:hidden}
+      /* Grid → flex kolona, vse znotraj kartice */
+      .sg{display:flex !important;flex-direction:column;gap:12px;width:100%;min-width:0}
+      .sg>.field,.sg>.ac-wrap{width:100%;min-width:0;max-width:100%}
+      /* Vsi inputi v .sg so znotraj okvirja */
+      .sg .field input,.sg .ac-wrap input{
+        width:100%;max-width:100%;min-width:0;
+        box-sizing:border-box;
+        -webkit-appearance:none;appearance:none;
+        font-size:16px /* iOS ne zooma pri 16px */
+      }
+      .btn-go{width:100%;justify-content:center;margin-top:2px}
+
+      /* ── DESTINACIJA HERO ─────────────────────── */
       .dest-hero{padding:20px 18px;flex-direction:column;align-items:flex-start;gap:14px}
       .btn-wl{width:100%;justify-content:center}
-      /* Section heads */
-      .sc-head{padding:14px 16px 12px;flex-wrap:wrap;row-gap:8px}
+
+      /* ── SECTION HEADS ───────────────────────────
+         Glava sekcije: ikona + naslov zgoraj,
+         weather linki v svoji vrstici spodaj         */
+      .sc-head{padding:14px 16px 12px;flex-wrap:wrap;row-gap:10px}
       .sc-ht{flex:1;min-width:0}
-      .w-links{width:100%;margin-left:0;order:3;gap:6px}
-      .w-badge{order:2}
-      .w-ext{flex:1;justify-content:center;font-size:11px;padding:5px 8px}
+      /* Weather linki: polna širina, svoja vrstica */
+      .w-links{width:100%;margin-left:0;gap:8px;order:10;flex-wrap:nowrap}
+      .w-badge{order:0}
+      .w-ext{flex:1;justify-content:center;font-size:12px;padding:8px 10px;
+             display:inline-flex !important}
       .sc-body{padding:14px 16px}
-      /* Weather */
-      .wg{grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px}
-      .wd{padding:10px 5px}
+
+      /* ── VREME ───────────────────────────────── */
+      .wg{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
+      .wd{padding:10px 6px}
       .wi{font-size:22px}
       .wmax{font-size:15px}
-      /* Accommodation: 1 col */
+
+      /* ── NASTANITVE ──────────────────────────── */
       .acg{grid-template-columns:1fr}
-      .acc{flex-direction:row;align-items:center;padding:14px 16px;gap:12px}
+      .acc{flex-direction:row;align-items:center;padding:14px 16px;gap:14px}
       .acc .al{font-size:28px;flex-shrink:0}
-      .acc .acta{margin-top:0;background:none;padding:0;font-size:11px}
-      /* Two-col places */
+      .acc .acta{margin-top:0;background:none;padding:0;font-size:12px}
+
+      /* ── RESTAVRACIJE & ZNAMENITOSTI ─────────── */
       .two-col{grid-template-columns:1fr;gap:16px}
-      /* Neighborhoods */
+
+      /* ── COOL ČETRTI ─────────────────────────── */
       .nbhd-grid{grid-template-columns:repeat(2,1fr);gap:10px}
       .nbhd-card{padding:14px 12px}
       .nbhd-emoji{font-size:28px}
-      /* Flight price cards */
-      .fp-card{flex-wrap:wrap;gap:8px;padding:14px 14px}
-      .fp-info{width:calc(100% - 50px)}
-      .fp-price-wrap{width:100%;text-align:left;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+      /* ── STROŠKOVNIK — LETALA ────────────────── */
+      .fp-card{flex-wrap:wrap;gap:8px;padding:14px}
+      .fp-info{flex:1;min-width:0}
+      .fp-price-wrap{width:100%;text-align:left;display:flex;
+                     align-items:center;gap:12px;flex-wrap:wrap}
       .fp-price{font-size:16px}
       .fp-check{top:10px;right:10px}
-      /* Car section */
+
+      /* ── STROŠKOVNIK — AVTO ──────────────────── */
       .car-from-row{flex-direction:column;align-items:stretch}
       .car-from-row input{min-width:0;width:100%}
       .btn-calc-route{width:100%;justify-content:center}
-      .car-row{flex-wrap:wrap;gap:6px}
+      .car-row{flex-wrap:wrap;gap:4px}
       .car-row-value{width:100%;text-align:right}
-      /* Cost total */
+
+      /* ── SKUPAJ ──────────────────────────────── */
       .ct-grand-value{font-size:24px}
       .ct-row{flex-wrap:wrap;gap:4px}
       .ct-row .cr-v{margin-left:auto}
-      /* Flights Skyscanner */
+
+      /* ── SKYSCANNER LETI ─────────────────────── */
       .fg{grid-template-columns:1fr}
       .fcard{padding:14px 16px}
-      /* Wishlist */
+
+      /* ── WISH LIST ───────────────────────────── */
       .wl-head{padding:16px 18px}
       .wl-body{padding:0 14px 20px}
       .wl-grid{grid-template-columns:1fr}
@@ -331,17 +366,19 @@
        MALI TELEFONI — do 420px
     ══════════════════════════════ */
     @media(max-width:420px){
-      h1{font-size:clamp(22px,7vw,32px)}
+      h1{font-size:clamp(20px,7vw,30px)}
       .nbhd-grid{grid-template-columns:1fr 1fr}
       .badges{gap:6px}
-      .badge{font-size:12px;padding:4px 10px}
-      .dest-info h2{font-size:22px}
+      .badge{font-size:11px;padding:4px 10px}
+      .dest-info h2{font-size:20px}
       .ct-grand-value{font-size:20px}
       .fp-route{font-size:13px}
-      .wg{grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:5px}
+      .wg{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:5px}
       .wd{padding:8px 4px}
       .wi{font-size:20px}
       .wmax{font-size:14px}
+      /* Weather linki drug za drugim na zelo majhnih zaslonih */
+      .w-ext{font-size:11px;padding:7px 8px}
     }
   </style>
 </head>
@@ -401,9 +438,6 @@
           <span class="w-badge" id="wBadge" style="display:none"></span>
           <a href="#" id="wLinkAW" target="_blank" rel="noopener" class="w-ext" style="display:none">
             <i class="fas fa-external-link-alt" style="font-size:10px"></i> AccuWeather
-          </a>
-          <a href="#" id="wLinkYr" target="_blank" rel="noopener" class="w-ext" style="display:none">
-            <i class="fas fa-external-link-alt" style="font-size:10px"></i> Yr.no
           </a>
         </div>
       </div>
@@ -513,9 +547,8 @@ function loadWeather(lat,lon,city,d1,d2){
   $$('wSub').textContent=city;
   // Set external weather links
   var ce=encodeURIComponent(city);
-  var aw=$$('wLinkAW'),yr=$$('wLinkYr');
-  if(aw){aw.href='https://www.accuweather.com/sl/search-locations?query='+ce;aw.style.display='';}
-  if(yr){yr.href='https://www.yr.no/nb/search?q='+ce;yr.style.display='';}
+  var aw=$$('wLinkAW');
+  if(aw){aw.href='https://www.accuweather.com/sl/search-locations?query='+ce;aw.style.display='inline-flex';}
   var today=new Date();today.setHours(0,0,0,0);
   var tripStart=new Date(d1+'T00:00:00'),daysAway=Math.floor((tripStart-today)/86400000);
   var historical=daysAway>14;
