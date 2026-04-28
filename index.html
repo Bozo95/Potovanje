@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✈️ Najino Potovanje</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{--primary:#6C63FF;--primary-light:#8B85FF;--secondary:#FF6584;--accent:#43C6AC;--bg:#0F0E17;--surface:#1A1929;--surface2:#232235;--surface3:#2D2C42;--text:#FFFFFE;--text-muted:#A7A9BE;--border:rgba(108,99,255,0.2);--shadow:0 8px 32px rgba(0,0,0,0.4);--radius:16px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 20%,rgba(108,99,255,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,101,132,.06) 0%,transparent 50%);animation:bgShift 20s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+    @keyframes bgShift{0%{transform:translate(0,0)}100%{transform:translate(2%,2%)}}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+    header{padding:32px 0 20px;text-align:center;position:relative}
+    .logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+    .btn-home{position:absolute;top:32px;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px 18px;font-size:13px;font-weight:700;color:var(--text-muted);cursor:pointer;font-family:'Inter',sans-serif;display:none;align-items:center;gap:8px;transition:all .2s}
+    .btn-home:hover{border-color:var(--primary);color:var(--text);background:var(--surface3)}
+    .btn-home.show{display:flex}
+    .logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 20px rgba(108,99,255,.4)}
+    h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,42px);background:linear-gradient(135deg,#fff 0%,var(--primary-light) 50%,var(--secondary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;letter-spacing:0.04em}
+    .subtitle{color:var(--text-muted);font-size:15px;margin-top:6px}
+
+    .tr-wrap{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px}
+    .tr-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+    .toggle-track{width:196px;height:44px;background:var(--surface2);border:1px solid var(--border);border-radius:22px;position:relative;cursor:pointer;display:flex;align-items:center;padding:4px}
+    .toggle-thumb{position:absolute;left:4px;width:90px;height:36px;border-radius:18px;background:linear-gradient(135deg,var(--primary),var(--primary-light));transition:transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 12px rgba(108,99,255,.4)}
+    .toggle-track.plane .toggle-thumb{transform:translateX(98px)}
+    .toggle-labels{display:flex;width:100%;justify-content:space-around;position:relative;z-index:1;pointer-events:none}
+    .toggle-labels span{font-size:13px;font-weight:700;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
+    .toggle-track.car .toggle-labels span:first-child,.toggle-track.plane .toggle-labels span:last-child{color:white}
+
+    .search-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:28px 32px;margin-bottom:28px;box-shadow:var(--shadow)}
+    .sg{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:16px;align-items:end}
+    @media(max-width:768px){.sg{grid-template-columns:1fr}}
+    .field{display:flex;flex-direction:column;gap:8px}
+    .field label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+    .field label i{margin-right:6px;color:var(--primary-light)}
+    .field input{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--text);font-size:15px;font-family:'Inter',sans-serif;outline:none;width:100%;transition:all .2s}
+    .field input:focus{border-color:var(--primary);background:var(--surface3);box-shadow:0 0 0 3px rgba(108,99,255,.15)}
+    /* AUTOCOMPLETE */
+    .ac-wrap{position:relative}
+    .ac-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:14px;z-index:200;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);display:none}
+    .ac-drop.show{display:block}
+    .ac-item{padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .12s}
+    .ac-item:last-child{border-bottom:none}
+    .ac-item:hover,.ac-item.hi{background:var(--surface3)}
+    .ac-flag{width:24px;flex-shrink:0;display:flex;align-items:center}
+    .ac-flag img{border-radius:2px;display:block}
+    .ac-city{font-weight:700;font-size:14px}
+    .ac-meta{font-size:12px;color:var(--text-muted);margin-top:1px}
+    .field input::placeholder{color:var(--text-muted)}
+    .field input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.6);cursor:pointer}
+    .btn-go{background:linear-gradient(135deg,var(--primary),var(--primary-light));border:none;border-radius:12px;padding:14px 28px;color:white;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 4px 15px rgba(108,99,255,.35);font-family:'Inter',sans-serif}
+    .btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(108,99,255,.45)}
+
+    .loader{display:none;text-align:center;padding:60px 20px}
+    .loader.show{display:block}
+    .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader p{color:var(--text-muted);font-size:15px}
+    .err-box{background:rgba(255,101,132,.1);border:1px solid rgba(255,101,132,.3);border-radius:14px;padding:16px 20px;margin-bottom:24px;display:none;gap:12px;align-items:flex-start}
+    .err-box.show{display:flex}
+    .err-box i{color:var(--secondary);font-size:18px;flex-shrink:0;margin-top:2px}
+    .err-box p{font-size:14px;line-height:1.7}
+
+    #results{display:none}
+
+    .dest-hero{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:24px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .dest-info h2{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);margin-bottom:6px}
+    .dest-sub{color:var(--text-muted);font-size:15px}
+    .dest-sub i{margin-right:6px;color:var(--secondary)}
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .badge{background:var(--surface3);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:13px;display:flex;align-items:center;gap:6px}
+    .badge i{color:var(--accent)}
+    .btn-wl{background:linear-gradient(135deg,var(--secondary),#ff8fa3);border:none;border-radius:14px;padding:13px 22px;color:white;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;box-shadow:0 4px 15px rgba(255,101,132,.3);white-space:nowrap}
+    .btn-wl:hover{transform:translateY(-2px)}
+    .btn-wl.saved{background:linear-gradient(135deg,var(--accent),#5bd8c3);box-shadow:0 4px 15px rgba(67,198,172,.3)}
+
+    .sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+    .sc-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+    .sc-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .sc-ht h3{font-size:16px;font-weight:700}
+    .sc-ht p{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .sc-body{padding:20px 24px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+    .w-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px}
+    .w-badge.fc{background:rgba(67,198,172,.15);color:var(--accent)}
+    .w-badge.hi{background:rgba(251,191,36,.15);color:#fbbf24}
+    .w-links{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .w-ext{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--text-muted);text-decoration:none;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:5px 11px;transition:all .2s;white-space:nowrap}
+    .w-ext:hover{color:var(--text);border-color:var(--primary);background:var(--surface2)}
+    .wg{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px}
+    .wd{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center;transition:all .2s}
+    .wd:hover{background:var(--surface3);border-color:var(--primary);transform:translateY(-2px)}
+    .dn{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase}
+    .dd{font-size:11px;color:var(--text-muted);margin:2px 0 8px}
+    .wi{font-size:26px;margin:4px 0}
+    .wmax{font-size:17px;font-weight:700}
+    .wmin{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .wrain{font-size:11px;color:#60a5fa;margin-top:4px}
+    .wdesc{font-size:10px;color:var(--text-muted);margin-top:4px}
+
+    .acg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media(max-width:700px){.acg{grid-template-columns:1fr}}
+    .acc{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;text-decoration:none;color:var(--text);transition:all .2s;display:flex;flex-direction:column;gap:8px}
+    .acc:hover{border-color:var(--primary);background:var(--surface3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+    .acc .al{font-size:36px}
+    .acc .an{font-weight:700;font-size:15px}
+    .acc .ad{font-size:12px;color:var(--text-muted);line-height:1.5}
+    .acc .acta{margin-top:auto;background:var(--surface3);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;color:var(--primary-light);display:flex;align-items:center;gap:6px}
+
+
+    .place{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .place:last-child{border-bottom:none;padding-bottom:0}
+    .pem{width:38px;height:38px;background:var(--surface3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:1px}
+    .pi strong{font-size:14px;font-weight:600;display:block;margin-bottom:4px}
+    .pi strong a{color:var(--text);text-decoration:none}
+    .pi strong a:hover{color:var(--primary-light)}
+    .pdesc{font-size:12px;color:var(--text-muted);line-height:1.55;margin-bottom:6px}
+    .ptags{display:flex;flex-wrap:wrap;gap:6px}
+    .ptag{background:var(--surface3);border-radius:6px;padding:3px 9px;font-size:11px;color:var(--text-muted)}
+    .ptag a{color:var(--primary-light);text-decoration:none}
+    .src-note{font-size:11px;color:var(--text-muted);margin-top:12px;display:flex;align-items:center;gap:5px}
+    .src-note a{color:var(--primary-light);text-decoration:none}
+    .fbl{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+    .fbl a{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 15px;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:10px;font-size:13px;transition:all .2s}
+    .fbl a:hover{border-color:var(--primary);background:var(--surface3)}
+    .fbl a i{color:var(--primary-light);width:16px}
+
+    /* ── COOL ČETRTI ── */
+    .nbhd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+    @media(max-width:900px){.nbhd-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:600px){.nbhd-grid{grid-template-columns:repeat(2,1fr)}}
+    .nbhd-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px 16px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--text)}
+    .nbhd-card:hover{border-color:var(--primary);background:var(--surface3);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+    .nbhd-emoji{font-size:36px;line-height:1}
+    .nbhd-name{font-weight:800;font-size:15px;font-family:'Playfair Display',serif;margin-top:4px}
+    .nbhd-vibe{font-size:11px;font-weight:700;color:var(--primary-light);text-transform:uppercase;letter-spacing:.6px}
+    .nbhd-desc{font-size:12px;color:var(--text-muted);line-height:1.6;flex:1}
+    .nbhd-gm{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--accent);margin-top:6px;font-weight:600}
+    .nbhd-gm i{font-size:10px}
+    .ic-n{background:linear-gradient(135deg,rgba(255,101,132,.15),rgba(108,99,255,.1))}
+    .ic-n i{color:var(--secondary)}
+
+    /* ── STROŠKOVNIK ── */
+    .fp-grid{display:flex;flex-direction:column;gap:10px}
+    .fp-card{background:var(--surface2);border:2px solid var(--border);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .2s;position:relative}
+    .fp-card:hover{border-color:var(--primary);background:var(--surface3);transform:translateX(4px)}
+    .fp-card.selected{border-color:var(--accent);background:rgba(67,198,172,.07)}
+    .fp-flag{font-size:28px;flex-shrink:0}
+    .fp-info{flex:1;min-width:0}
+    .fp-route{font-weight:700;font-size:14px}
+    .fp-dist{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .fp-price-wrap{text-align:right;flex-shrink:0}
+    .fp-price{font-size:18px;font-weight:800;color:var(--accent)}
+    .fp-pp{font-size:11px;color:var(--text-muted)}
+    .fp-sky{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--primary-light);text-decoration:none;background:rgba(108,99,255,.12);border-radius:6px;padding:3px 8px;margin-top:4px;transition:all .2s}
+    .fp-sky:hover{background:rgba(108,99,255,.22);color:white}
+    .fp-check{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;background:var(--surface3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s}
+    .fp-card.selected .fp-check{background:var(--accent);border-color:var(--accent);color:white}
+    .fp-season-note{font-size:12px;color:var(--text-muted);margin-top:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;display:flex;align-items:center;gap:6px}
+    .fp-season-note i{color:#fbbf24}
+
+    .car-from-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+    .car-from-row label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+    .car-from-row input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;flex:1;min-width:180px;transition:all .2s}
+    .car-from-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,.15)}
+    .btn-calc-route{background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:700;color:var(--primary-light);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+    .btn-calc-route:hover{background:rgba(108,99,255,.25)}
+    .car-result{background:var(--surface2);border-radius:12px;overflow:hidden}
+    .car-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.05)}
+    .car-row:last-child{border-bottom:none}
+    .car-row-label{display:flex;align-items:center;gap:10px;font-size:14px}
+    .car-row-label .ci{font-size:18px}
+    .car-row-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+    .car-row-value{font-weight:700;font-size:15px}
+    .car-row.tot-row{background:rgba(108,99,255,.08)}
+    .car-row.tot-row .car-row-value{color:var(--primary-light);font-size:17px}
+    .fuel-edit{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted)}
+    .fuel-edit input{width:48px;background:var(--surface3);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;text-align:center}
+
+    .cost-inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    @media(max-width:650px){.cost-inputs{grid-template-columns:1fr}}
+    .ci-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+    .ci-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+    .ci-iw{display:flex;align-items:center;background:var(--surface3);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .2s}
+    .ci-iw:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,99,255,.15)}
+    .ci-eur{padding:12px 14px;font-size:18px;font-weight:700;color:var(--primary-light);background:rgba(108,99,255,.08);border-right:1px solid var(--border)}
+    .ci-iw input{flex:1;background:transparent;border:none;outline:none;padding:12px 16px;color:var(--text);font-size:18px;font-weight:700;font-family:'Inter',sans-serif}
+    .ci-iw input::placeholder{color:var(--text-muted);font-size:15px;font-weight:400}
+    .ci-hint{font-size:12px;color:var(--text-muted);margin-top:8px;display:flex;align-items:center;gap:5px}
+    .ci-hint i{color:var(--accent)}
+    .ci-calc{font-size:13px;color:var(--accent);margin-top:8px;font-weight:600;min-height:20px}
+
+    .cost-total{background:linear-gradient(135deg,rgba(108,99,255,.1),rgba(67,198,172,.06));border:1px solid rgba(108,99,255,.25);border-radius:16px;padding:22px 24px;margin-top:20px}
+    .ct-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .ct-title i{color:var(--primary-light)}
+    .ct-rows{display:flex;flex-direction:column;gap:8px}
+    .ct-row{display:flex;align-items:center;justify-content:space-between;font-size:14px}
+    .ct-row .cr-l{display:flex;align-items:center;gap:8px;color:var(--text-muted)}
+    .ct-row .cr-v{font-weight:600;color:var(--text)}
+    .ct-row .cr-v.na{color:var(--text-muted);font-weight:400;font-style:italic}
+    .ct-div{border:none;border-top:1px solid rgba(108,99,255,.2);margin:12px 0}
+    .ct-grand{display:flex;align-items:flex-end;justify-content:space-between;margin-top:4px}
+    .ct-grand-label{font-size:16px;font-weight:700}
+    .ct-grand-value{font-size:28px;font-weight:800;color:var(--primary-light)}
+    .ct-pp{text-align:right;margin-top:4px;font-size:13px;color:var(--text-muted)}
+    .ct-pp span{color:var(--accent);font-weight:700}
+
+    .fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:700px){.fg{grid-template-columns:1fr}}
+    .fcard{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:18px 20px;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:12px;transition:all .2s}
+    .fcard:hover{border-color:var(--primary);background:var(--surface3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+    .fcs{flex:1}
+    .fcity{font-weight:700;font-size:15px;display:flex;align-items:center;gap:7px}
+    .fcode{font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;margin-top:2px}
+    .fdate{font-size:11px;color:var(--text-muted);margin-top:7px;display:flex;align-items:center;gap:5px}
+    .farr{color:var(--primary-light);font-size:18px;flex-shrink:0}
+    .fext{color:var(--text-muted);font-size:13px;flex-shrink:0}
+
+    .ml{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;padding:20px 0}
+    .msp{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+
+    .wl-sec{background:var(--surface);border:1px solid var(--border);border-radius:24px;overflow:hidden;margin-top:16px}
+    .wl-head{padding:22px 28px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .2s}
+    .wl-head:hover{background:var(--surface2)}
+    .wl-hl{display:flex;align-items:center;gap:14px}
+    .wl-ico{width:44px;height:44px;background:linear-gradient(135deg,var(--secondary),#ff8fa3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+    .wl-head h2{font-size:20px;font-weight:700}
+    .wl-head p{font-size:13px;color:var(--text-muted);margin-top:2px}
+    .wl-chev{width:36px;height:36px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform .3s}
+    .wl-chev.open{transform:rotate(180deg)}
+    .wl-body{padding:0 28px 28px;display:none}
+    .wl-body.open{display:block}
+    .wl-empty{text-align:center;padding:40px 20px;color:var(--text-muted)}
+    .wl-empty i{font-size:40px;margin-bottom:12px;display:block;opacity:.4}
+    .wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+    .wc{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:18px;transition:all .2s}
+    .wc:hover{border-color:var(--primary);transform:translateY(-2px)}
+    .wc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+    .wc-city{font-size:17px;font-weight:700;font-family:'Playfair Display',serif;display:flex;align-items:center;gap:7px}
+    .wc-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
+    .wc-date{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;margin-top:5px}
+    .wc-date i{color:var(--accent);font-size:10px}
+    .wc-meta{background:var(--surface3);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;margin-top:8px}
+    .wc-del{background:rgba(255,101,132,.1);border:none;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--secondary);cursor:pointer;transition:all .2s;font-size:13px}
+    .wc-del:hover{background:rgba(255,101,132,.2);transform:scale(1.1)}
+    .wc-load{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--primary-light);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;margin-top:10px}
+    .wc-load:hover{background:rgba(108,99,255,.2)}
+
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;box-shadow:var(--shadow);z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.ok i{color:var(--accent)} .toast.info i{color:var(--primary-light)} .toast.warn i{color:#f59e0b}
+
+    .ic-w{background:rgba(67,198,172,.15)} .ic-w i{color:var(--accent)}
+    .ic-h{background:rgba(108,99,255,.15)} .ic-h i{color:var(--primary-light)}
+    .ic-r{background:rgba(255,101,132,.15)} .ic-r i{color:var(--secondary)}
+    .ic-s{background:rgba(251,191,36,.15)}  .ic-s i{color:#fbbf24}
+    .ic-f{background:rgba(67,198,172,.12)}  .ic-f i{color:var(--accent)}
+    .ic-cost{background:linear-gradient(135deg,rgba(108,99,255,.2),rgba(67,198,172,.1))} .ic-cost i{color:var(--primary-light)}
+    hr.div{border:none;border-top:1px solid var(--border);margin:28px 0}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <button class="btn-home" id="btnHome" onclick="goHome()"><i class="fas fa-home"></i> Domov</button>
+    <div class="logo"><div class="logo-icon">✈️</div><h1>Najino Potovanje</h1></div>
+    <p class="subtitle">Načrtujta skupaj svoje sanjsko potovanje ❤️</p>
+  </header>
+
+  <div class="tr-wrap">
+    <span class="tr-label">Prevoz:</span>
+    <div class="toggle-track car" id="tTog" onclick="flipT()">
+      <div class="toggle-thumb"></div>
+      <div class="toggle-labels">
+        <span><i class="fas fa-car"></i> Avto</span>
+        <span><i class="fas fa-plane"></i> Letalo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-card">
+    <div class="sg">
+      <div class="field ac-wrap" id="acWrap">
+        <label><i class="fas fa-map-marker-alt"></i>Destinacija</label>
+        <input type="text" id="cityIn" placeholder="npr. Pariz, Barcelona, Dubrovnik…" autocomplete="off">
+        <div class="ac-drop" id="acDrop"></div>
+      </div>
+      <div class="field"><label><i class="fas fa-plane-departure"></i>Odhod</label><input type="date" id="d1"></div>
+      <div class="field"><label><i class="fas fa-plane-arrival"></i>Prihod domov</label><input type="date" id="d2"></div>
+      <button class="btn-go" onclick="go()"><i class="fas fa-search"></i> Išči</button>
+    </div>
+  </div>
+
+  <div class="err-box" id="errBox"><i class="fas fa-exclamation-triangle"></i><p id="errMsg"></p></div>
+  <div class="loader" id="loader"><div class="spinner"></div><p id="loaderMsg">Iščem…</p></div>
+
+  <div id="results">
+
+    <div class="dest-hero">
+      <div class="dest-info">
+        <h2 id="rTitle"></h2>
+        <p class="dest-sub"><i class="fas fa-calendar-alt"></i><span id="rDates"></span></p>
+        <div class="badges" id="rBadges"></div>
+      </div>
+      <button class="btn-wl" id="wlBtn" onclick="wlToggle()"><i class="fas fa-heart"></i> Dodaj na Wish List</button>
+    </div>
+
+    <!-- WEATHER -->
+    <div class="sc">
+      <div class="sc-head">
+        <div class="sc-icon ic-w"><i class="fas fa-cloud-sun"></i></div>
+        <div class="sc-ht"><h3>Vreme med potovanjem</h3><p id="wSub">…</p></div>
+        <div class="w-links">
+          <span class="w-badge" id="wBadge" style="display:none"></span>
+          <a href="#" id="wLinkAW" target="_blank" rel="noopener" class="w-ext" style="display:none">
+            <i class="fas fa-external-link-alt" style="font-size:10px"></i> AccuWeather
+          </a>
+          <a href="#" id="wLinkYr" target="_blank" rel="noopener" class="w-ext" style="display:none">
+            <i class="fas fa-external-link-alt" style="font-size:10px"></i> Yr.no
+          </a>
+        </div>
+      </div>
+      <div class="sc-body"><div class="wg" id="wGrid"><div class="ml"><div class="msp"></div>Nalagam napoved…</div></div></div>
+    </div>
+
+    <!-- ACCOMMODATION -->
+    <div class="sc">
+      <div class="sc-head">
+        <div class="sc-icon ic-h"><i class="fas fa-hotel"></i></div>
+        <div class="sc-ht"><h3>Nastanitve</h3><p>Klikni za prikaz ponudbe tukaj na strani</p></div>
+      </div>
+      <div class="sc-body"><div class="acg" id="acGrid"></div></div>
+    </div>
+
+    <!-- RESTAURANTS + SIGHTS -->
+    <div class="two-col">
+      <div class="sc" style="margin-bottom:0">
+        <div class="sc-head"><div class="sc-icon ic-r"><i class="fas fa-utensils"></i></div><div class="sc-ht"><h3>Top 5 Restavracij</h3><p>Wikivoyage</p></div></div>
+        <div class="sc-body" id="restList"><div class="ml"><div class="msp"></div>Iščem…</div></div>
+      </div>
+      <div class="sc" style="margin-bottom:0">
+        <div class="sc-head"><div class="sc-icon ic-s"><i class="fas fa-monument"></i></div><div class="sc-ht"><h3>Top 5 Znamenitosti</h3><p>Wikivoyage</p></div></div>
+        <div class="sc-body" id="sightList"><div class="ml"><div class="msp"></div>Iščem…</div></div>
+      </div>
+    </div>
+
+    <!-- COOL ČETRTI -->
+    <div class="sc" id="nbhdSec" style="display:none;margin-top:24px">
+      <div class="sc-head">
+        <div class="sc-icon ic-n"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="sc-ht"><h3>Top 5 Cool Delov Mesta</h3><p id="nbhdSrc">Must-see četrti &amp; področja · Wikivoyage</p></div>
+      </div>
+      <div class="sc-body">
+        <div class="nbhd-grid" id="nbhdGrid"><div class="ml"><div class="msp"></div>Iščem zanimive četrti…</div></div>
+      </div>
+    </div>
+
+    <!-- STROŠKOVNIK -->
+    <div class="sc" id="costSec" style="display:none;margin-top:24px">
+      <div class="sc-head">
+        <div class="sc-icon ic-cost"><i class="fas fa-calculator"></i></div>
+        <div class="sc-ht"><h3>Stroškovnik</h3><p id="costSub">Ocenjeni stroški za 2 osebi</p></div>
+      </div>
+      <div class="sc-body" id="costBody"></div>
+    </div>
+
+    <!-- FLIGHTS -->
+    <div class="sc" id="flightsSec" style="display:none;margin-top:24px">
+      <div class="sc-head">
+        <div class="sc-icon ic-f"><i class="fas fa-plane-departure"></i></div>
+        <div class="sc-ht"><h3>Leti do destinacije</h3><p>Skyscanner — iz bližnjih letališč</p></div>
+      </div>
+      <div class="sc-body"><div class="fg" id="fGrid"></div></div>
+    </div>
+
+  </div>
+
+  <hr class="div">
+
+  <div class="wl-sec">
+    <div class="wl-head" onclick="wlPanel()">
+      <div class="wl-hl"><div class="wl-ico">💝</div><div><h2>Wish List</h2><p id="wlCount">Shranjenih potovanj: 0</p></div></div>
+      <div class="wl-chev" id="wlChev"><i class="fas fa-chevron-down"></i></div>
+    </div>
+    <div class="wl-body" id="wlBody"><div id="wlContent"></div></div>
+  </div>
+  <div style="height:60px"></div>
+</div>
+
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastTxt"></span></div>
+
+<script>
+'use strict';
+// ── STATE ─────────────────────────────────────────
+var trip=null, transport='car', ovLinks=[], wl=[];
+var selFlight=-1, selFlightCost=0, carTotal=0;
+var fuelL=7.0, fuelPrice=1.65;
+try{wl=JSON.parse(localStorage.getItem('njp_wl')||'[]');}catch(_){}
+
+// ── HELPERS ───────────────────────────────────────
+function $$(id){return document.getElementById(id);}
+function he(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDate(iso){if(!iso)return'';var d=new Date(iso+'T00:00:00');return d.toLocaleDateString('sl-SI',{day:'numeric',month:'long',year:'numeric'});}
+function dayN(iso){return['Ned','Pon','Tor','Sre','Čet','Pet','Sob'][new Date(iso+'T00:00:00').getDay()];}
+function nts(a,b){if(!a||!b)return 0;return Math.max(0,Math.round((new Date(b)-new Date(a))/86400000));}
+function addD(iso,n){var d=new Date(iso+'T00:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function lastY(iso){var d=new Date(iso+'T00:00:00');d.setFullYear(d.getFullYear()-1);return d.toISOString().slice(0,10);}
+function skyD(iso){return iso.replace(/-/g,'').slice(2);}
+function fmtEur(n){return n<1?'—':'€\u00A0'+Math.round(n).toLocaleString('sl-SI');}
+function haversine(la1,lo1,la2,lo2){var R=6371,d2r=Math.PI/180,dlat=(la2-la1)*d2r,dlon=(lo2-lo1)*d2r,a=Math.sin(dlat/2)*Math.sin(dlat/2)+Math.cos(la1*d2r)*Math.cos(la2*d2r)*Math.sin(dlon/2)*Math.sin(dlon/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+
+function toast(msg,type){type=type||'ok';var t=$$('toast');t.className='toast '+type;t.querySelector('i').className=type==='ok'?'fas fa-check-circle':type==='warn'?'fas fa-exclamation-triangle':'fas fa-info-circle';$$('toastTxt').textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);}
+function showErr(h){$$('errMsg').innerHTML=h;$$('errBox').classList.add('show');}
+function hideErr(){$$('errBox').classList.remove('show');}
+function setLoader(show,msg){if(show){$$('loader').classList.add('show');if(msg)$$('loaderMsg').textContent=msg;}else $$('loader').classList.remove('show');}
+function fetchT(url,opts,ms){ms=ms||12000;var ctrl=new AbortController(),tid=setTimeout(function(){ctrl.abort();},ms);return fetch(url,Object.assign({},opts||{},{signal:ctrl.signal})).then(function(r){clearTimeout(tid);if(!r.ok)throw new Error('HTTP '+r.status);return r;}).catch(function(e){clearTimeout(tid);throw e;});}
+
+// ── TRANSPORT ─────────────────────────────────────
+function flipT(){transport=transport==='car'?'plane':'car';var t=$$('tTog');t.classList.toggle('car',transport==='car');t.classList.toggle('plane',transport==='plane');}
+
+// ── WEATHER ───────────────────────────────────────
+var WMO={0:{i:'☀️',d:'Jasno'},1:{i:'🌤️',d:'Pretežno jasno'},2:{i:'⛅',d:'Delno oblačno'},3:{i:'☁️',d:'Oblačno'},45:{i:'🌫️',d:'Megla'},48:{i:'🌫️',d:'Megla'},51:{i:'🌦️',d:'Rosenje'},53:{i:'🌦️',d:'Rosenje'},55:{i:'🌦️',d:'Rosenje'},61:{i:'🌧️',d:'Dež'},63:{i:'🌧️',d:'Dež'},65:{i:'🌧️',d:'Močan dež'},71:{i:'🌨️',d:'Sneg'},73:{i:'🌨️',d:'Sneg'},75:{i:'❄️',d:'Sneg'},77:{i:'🌨️',d:'Sneg'},80:{i:'🌦️',d:'Plohe'},81:{i:'🌧️',d:'Plohe'},82:{i:'⛈️',d:'Plohe'},85:{i:'🌨️',d:'Sneg'},95:{i:'⛈️',d:'Nevihta'},96:{i:'⛈️',d:'Nevihta'},99:{i:'⛈️',d:'Nevihta'}};
+function wmoG(c){return WMO[c]||{i:'🌡️',d:'Neznano'};}
+function loadWeather(lat,lon,city,d1,d2){
+  $$('wSub').textContent=city;
+  // Set external weather links
+  var ce=encodeURIComponent(city);
+  var aw=$$('wLinkAW'),yr=$$('wLinkYr');
+  if(aw){aw.href='https://www.accuweather.com/sl/search-locations?query='+ce;aw.style.display='';}
+  if(yr){yr.href='https://www.yr.no/nb/search?q='+ce;yr.style.display='';}
+  var today=new Date();today.setHours(0,0,0,0);
+  var tripStart=new Date(d1+'T00:00:00'),daysAway=Math.floor((tripStart-today)/86400000);
+  var historical=daysAway>14;
+  // For forecast API max 16 days; for historical (last-year archive) allow up to 30 days
+  var nDays=Math.min(Math.max(nts(d1,d2),1), historical?30:16);
+  var endDate=addD(d1,nDays-1);
+  var fs=historical?lastY(d1):d1,fe=historical?lastY(endDate):endDate,url;
+  if(historical) url='https://archive-api.open-meteo.com/v1/archive?latitude='+lat+'&longitude='+lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&start_date='+fs+'&end_date='+fe;
+  else url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=16&start_date='+fs+'&end_date='+fe;
+  var badge=$$('wBadge');badge.style.display='';
+  if(historical){badge.textContent='📅 Povprečje lanskega leta';badge.className='w-badge hi';}
+  else{badge.textContent='🔮 Napoved za termin';badge.className='w-badge fc';}
+  return fetchT(url,{},12000).then(function(r){return r.json();}).then(function(data){
+    if(!data.daily||!data.daily.time||!data.daily.time.length)throw new Error('no data');
+    var grid=$$('wGrid');grid.innerHTML='';
+    var actualDates=[];for(var i=0;i<nDays;i++)actualDates.push(addD(d1,i));
+    data.daily.time.forEach(function(_,i){
+      if(i>=actualDates.length)return;
+      var ad=actualDates[i],w=wmoG(data.daily.weathercode[i]),p=data.daily.precipitation_sum[i]||0;
+      var el=document.createElement('div');el.className='wd';
+      el.innerHTML='<div class="dn">'+dayN(ad)+'</div><div class="dd">'+ad.slice(5).replace('-','.')+'</div><div class="wi">'+w.i+'</div><div class="wmax">'+Math.round(data.daily.temperature_2m_max[i])+'°</div><div class="wmin">'+Math.round(data.daily.temperature_2m_min[i])+'°</div>'+(p>0?'<div class="wrain">💧'+p.toFixed(1)+'mm</div>':'')+'<div class="wdesc">'+w.d+'</div>';
+      grid.appendChild(el);
+    });
+  }).catch(function(){$$('wGrid').innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:8px 0">⚠️ Napoved ni na voljo.</p>';});
+}
+
+// ── ACCOMMODATION ─────────────────────────────────
+function buildAccom(city,d1,d2){
+  var n=nts(d1,d2),ce=encodeURIComponent(city);
+  var links=[
+    {name:'Booking.com',emoji:'🏨',url:'https://www.booking.com/searchresults.html?ss='+ce+'&checkin='+d1+'&checkout='+d2+'&group_adults=2&no_rooms=1',desc:n+' noči · 2 osebi · hoteli, apartmaji, vile'},
+    {name:'Airbnb',emoji:'🏠',url:'https://www.airbnb.com/s/'+ce+'/homes?checkin='+d1+'&checkout='+d2+'&adults=2',desc:n+' noči · 2 osebi · stanovanja, hiše, sobe'},
+    {name:'Hotels.com',emoji:'⭐',url:'https://www.hotels.com/search.do?q-destination='+ce+'&q-check-in='+d1+'&q-check-out='+d2+'&q-rooms=1&q-room-0-adults=2',desc:'Primerjaj hotele · '+n+' noči'}
+  ];
+  $$('acGrid').innerHTML=links.map(function(o){
+    return'<a href="'+o.url+'" target="_blank" rel="noopener" class="acc">'
+      +'<div class="al">'+o.emoji+'</div>'
+      +'<div class="an">'+o.name+'</div>'
+      +'<div class="ad">'+o.desc+'</div>'
+      +'<div class="accta"><i class="fas fa-external-link-alt"></i> Odpri in išči nastanitve</div>'
+      +'</a>';
+  }).join('');
+}
+
+// ── WIKIVOYAGE ────────────────────────────────────
+function parseVcard(v){
+  var descEl=v.querySelector('.listing-description'),urlEl=v.querySelector('a[href^="http"]');
+  return{name:v.dataset.name||'',address:v.dataset.address||'',hours:v.dataset.hours||'',price:v.dataset.price||'',url:v.dataset.url||(urlEl?urlEl.href:''),desc:(descEl?descEl.textContent.trim().slice(0,180):'')};
+}
+function extractBySection(doc,kws){
+  var heads=doc.querySelectorAll('h2,h3'),tgt=null;
+  for(var i=0;i<heads.length;i++){var txt=heads[i].textContent.toLowerCase();for(var k=0;k<kws.length;k++){if(txt.indexOf(kws[k].toLowerCase())!==-1){tgt=heads[i];break;}}if(tgt)break;}
+  if(!tgt)return[];
+  var res=[],node=(tgt.parentElement&&tgt.parentElement.tagName!=='BODY')?tgt.parentElement:tgt,sib=node.nextElementSibling;
+  while(sib){if(sib.tagName==='H2')break;var cards=sib.querySelectorAll('.vcard[data-name]');for(var j=0;j<cards.length;j++)res.push(cards[j]);if(sib.classList&&sib.classList.contains('vcard')&&sib.dataset&&sib.dataset.name)res.push(sib);sib=sib.nextElementSibling;}
+  return res;
+}
+
+// Extract districts from ul/li structure (Wikivoyage districts section)
+function extractDistrictsList(doc,kws){
+  var heads=doc.querySelectorAll('h2,h3'),tgt=null;
+  for(var i=0;i<heads.length;i++){var txt=heads[i].textContent.trim().toLowerCase();for(var k=0;k<kws.length;k++){if(txt.indexOf(kws[k].toLowerCase())!==-1){tgt=heads[i];break;}}if(tgt)break;}
+  if(!tgt)return[];
+  var res=[],node=(tgt.parentElement&&tgt.parentElement.tagName!=='BODY')?tgt.parentElement:tgt,sib=node.nextElementSibling;
+  while(sib&&sib.tagName!=='H2'){
+    // Check for vcard-style districts
+    var vcards=sib.querySelectorAll('.vcard[data-name]');
+    vcards.forEach(function(v){if(v.dataset.name)res.push({name:v.dataset.name,desc:(v.querySelector('.listing-description')||{}).textContent||'',url:'',type:'vcard'});});
+    // Check for list-based districts (ul > li)
+    if(sib.tagName==='UL'){
+      var items=sib.querySelectorAll('li');
+      items.forEach(function(li){
+        var a=li.querySelector('a');
+        var fullText=li.textContent.trim();
+        var name=a?a.textContent.trim():fullText.split('—')[0].split('–')[0].trim();
+        var dashIdx=Math.max(fullText.indexOf('—'),fullText.indexOf('–'));
+        var desc=dashIdx>-1?fullText.slice(dashIdx+1).trim():'';
+        if(name&&name.length>1&&name.length<80&&desc.length>10)
+          res.push({name:name,desc:desc.slice(0,220),url:a?a.href:'',type:'list'});
+      });
+    }
+    sib=sib.nextElementSibling;
+  }
+  return res;
+}
+
+// Determine emoji + vibe label for a district based on name and description
+function districtEmoji(name,desc){
+  var t=(name+' '+desc).toLowerCase();
+  if(/canal|navigli|waterfront|river|port|harbour|dock/i.test(t))return{e:'⚓',v:'Ob vodi'};
+  if(/art|design|brera|gallery|museum|creative|artist/i.test(t))return{e:'🎨',v:'Umetnost & dizajn'};
+  if(/night|bar|club|party|trendy|hip|cool|vibrant|lively|bohemian/i.test(t))return{e:'🎶',v:'Živahno & trendovsko'};
+  if(/shop|boutique|fashion|luxury|high.end|market/i.test(t))return{e:'🛍️',v:'Nakupovanje'};
+  if(/food|restaurant|cuisine|gastro|cafe|coffee|culinary/i.test(t))return{e:'🍷',v:'Kulinarika'};
+  if(/park|garden|green|nature|palace|royal/i.test(t))return{e:'🌿',v:'Narava & parki'};
+  if(/old|historic|medieval|ancient|castle|cathedral|heritage/i.test(t))return{e:'🏛️',v:'Zgodovinsko'};
+  if(/beach|sea|coast|riviera|seafront/i.test(t))return{e:'🏖️',v:'Ob morju'};
+  if(/jewish|arabic|ethnic|quarter|multicultural/i.test(t))return{e:'🕌',v:'Kulturna četrt'};
+  if(/student|university|young|intellectual|bookshop/i.test(t))return{e:'📚',v:'Študentsko'};
+  if(/view|panorama|hill|skyline|lookout/i.test(t))return{e:'👁️',v:'Razgled'};
+  return{e:'🏙️',v:'Must-see'};
+}
+
+function loadWikivoyage(cityName){
+  return fetchT('https://en.wikivoyage.org/w/api.php?action=query&list=search&srsearch='+encodeURIComponent(cityName)+'&srlimit=5&format=json&origin=*',{},9000)
+    .then(function(r){return r.json();})
+    .then(function(sd){
+      var results=(sd.query&&sd.query.search)||[],title=cityName;
+      if(results.length){var ex=results.filter(function(r){return r.title.toLowerCase()===cityName.toLowerCase();});title=(ex.length?ex[0]:results[0]).title;}
+      return title;
+    }).catch(function(){return cityName;})
+    .then(function(title){
+      return fetchT('https://en.wikivoyage.org/w/api.php?action=parse&page='+encodeURIComponent(title)+'&prop=text&format=json&origin=*',{},16000)
+        .then(function(r){return r.json();})
+        .then(function(data){
+          if(data.error)throw new Error('Not found');
+          var doc=new DOMParser().parseFromString(data.parse.text['*'],'text/html');
+          var all=Array.from(doc.querySelectorAll('.vcard[data-name]'));
+          var eats=all.filter(function(v){return v.classList.contains('eat')||v.classList.contains('drink');});
+          var sees=all.filter(function(v){return v.classList.contains('see')||v.classList.contains('do');});
+          if(!eats.length)eats=extractBySection(doc,['Eat','Food','Restaurants','Dining','Drink']);
+          if(!sees.length)sees=extractBySection(doc,['See','Sights','Attractions','Do','Visit']);
+          if(!eats.length&&!sees.length&&all.length){var mid=Math.ceil(all.length/2);sees=all.slice(0,mid);eats=all.slice(mid);}
+
+          // Extract districts (neighborhoods)
+          var distKws=['Districts','Neighbourhoods','Neighborhoods','Areas','Boroughs','Quarters','City districts','Arrondissements'];
+          var distVcards=extractBySection(doc,distKws);
+          var distList=extractDistrictsList(doc,distKws);
+          var districts=distVcards.length
+            ? distVcards.slice(0,5).map(parseVcard).filter(function(p){return p.name;})
+            : distList.slice(0,5).filter(function(p){return p.name;});
+
+          return{restaurants:eats.slice(0,5).map(parseVcard).filter(function(p){return p.name;}),sights:sees.slice(0,5).map(parseVcard).filter(function(p){return p.name;}),districts:districts,article:title};
+        });
+    });
+}
+
+var REMI=['🍝','🥩','🍷','🍣','🥗'],SEMI=['🏛️','⛪','🏰','👁️','🌿'];
+function renderPlaces(list,cid,type,city,article){
+  var el=$$(cid),emojis=type==='rest'?REMI:SEMI;
+  if(!list||!list.length){el.innerHTML=fbLinks(type,city);return;}
+  var html=list.map(function(p,i){
+    var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.name+' '+city);
+    return'<div class="place"><div class="pem">'+(emojis[i]||'✨')+'</div><div class="pi"><strong><a href="'+gm+'" target="_blank">'+he(p.name)+' <i class="fas fa-external-link-alt" style="font-size:9px;color:var(--text-muted)"></i></a></strong>'+(p.desc?'<div class="pdesc">'+he(p.desc.slice(0,160))+(p.desc.length>160?'…':'')+'</div>':'')+'<div class="ptags">'+(p.address?'<span class="ptag">📍 '+he(p.address)+'</span>':'')+(p.hours?'<span class="ptag">🕐 '+he(p.hours.split(';')[0])+'</span>':'')+(p.price?'<span class="ptag">💶 '+he(p.price)+'</span>':'')+(p.url?'<span class="ptag"><a href="'+p.url+'" target="_blank">🔗 Spletna stran</a></span>':'')+'</div></div></div>';
+  }).join('');
+  html+='<div class="src-note"><i class="fas fa-search" style="color:var(--accent)"></i> Vir: <a href="https://en.wikivoyage.org/wiki/'+encodeURIComponent(article)+'" target="_blank">Wikivoyage — '+he(article)+'</a></div>';
+  el.innerHTML=html;
+}
+
+// ── NEIGHBORHOODS ─────────────────────────────────
+function renderDistricts(districts, city, article){
+  var sec=$$('nbhdSec'), grid=$$('nbhdGrid');
+  if(!districts||!districts.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  $$('nbhdSrc').textContent='Must-see četrti & področja · Wikivoyage / '+article;
+  grid.innerHTML=districts.map(function(d){
+    var ev=districtEmoji(d.name||'',d.desc||'');
+    var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((d.name||'')+' '+city+' neighborhood');
+    return'<a href="'+gm+'" target="_blank" class="nbhd-card">'
+      +'<div class="nbhd-emoji">'+ev.e+'</div>'
+      +'<div class="nbhd-name">'+he(d.name||'')+'</div>'
+      +'<div class="nbhd-vibe">'+ev.v+'</div>'
+      +'<div class="nbhd-desc">'+he((d.desc||'').slice(0,160))+((d.desc||'').length>160?'…':'')+'</div>'
+      +'<div class="nbhd-gm"><i class="fab fa-google"></i> Poglej na Maps</div>'
+      +'</a>';
+  }).join('');
+}
+
+function fbLinks(type,city){
+  var ce=encodeURIComponent(city);
+  if(type==='rest')return'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Poišči restavracije na:</p><div class="fbl"><a href="https://www.tripadvisor.com/Restaurants-g-'+ce+'.html" target="_blank"><i class="fas fa-star"></i> TripAdvisor</a><a href="https://www.google.com/maps/search/restaurants+in+'+ce+'" target="_blank"><i class="fab fa-google"></i> Google Maps</a><a href="https://www.thefork.com/search#cityName='+ce+'" target="_blank"><i class="fas fa-concierge-bell"></i> TheFork</a></div>';
+  return'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Poišči znamenitosti na:</p><div class="fbl"><a href="https://www.tripadvisor.com/Attractions-g-'+ce+'.html" target="_blank"><i class="fas fa-star"></i> TripAdvisor</a><a href="https://www.google.com/maps/search/attractions+in+'+ce+'" target="_blank"><i class="fab fa-google"></i> Google Maps</a><a href="https://en.wikivoyage.org/wiki/'+ce+'" target="_blank"><i class="fas fa-book-open"></i> Wikivoyage</a></div>';
+}
+
+// ── FLIGHTS ───────────────────────────────────────
+var IATA={'paris':'PAR','london':'LON','rome':'ROM','barcelona':'BCN','amsterdam':'AMS','berlin':'BER','madrid':'MAD','lisbon':'LIS','prague':'PRG','vienna':'VIE','budapest':'BUD','warsaw':'WAW','athens':'ATH','istanbul':'IST','dubai':'DXB','dubrovnik':'DBV','split':'SPU','zadar':'ZAD','zagreb':'ZAG','venice':'VCE','milan':'MIL','florence':'FLR','naples':'NAP','bologna':'BLQ','pisa':'PSA','verona':'VRN','bari':'BRI','palermo':'PMO','catania':'CTA','nice':'NCE','marseille':'MRS','lyon':'LYS','munich':'MUC','frankfurt':'FRA','hamburg':'HAM','dusseldorf':'DUS','zurich':'ZRH','geneva':'GVA','brussels':'BRU','copenhagen':'CPH','stockholm':'STO','oslo':'OSL','helsinki':'HEL','porto':'OPO','seville':'SVQ','valencia':'VLC','malaga':'AGP','palma':'PMI','ibiza':'IBZ','tenerife':'TFS','gran canaria':'LPA','mykonos':'JMK','santorini':'JTR','rhodes':'RHO','heraklion':'HER','corfu':'CFU','thessaloniki':'SKG','antalya':'AYT','bodrum':'BJV','izmir':'ADB','marrakech':'RAK','casablanca':'CMN','cairo':'CAI','tel aviv':'TLV','new york':'NYC','los angeles':'LAX','miami':'MIA','cancun':'CUN','bangkok':'BKK','bali':'DPS','singapore':'SIN','hong kong':'HKG','tokyo':'TYO','seoul':'SEL','kuala lumpur':'KUL','sydney':'SYD','melbourne':'MEL','riga':'RIX','tallinn':'TLL','vilnius':'VNO','bratislava':'BTS','ljubljana':'LJU','sarajevo':'SJJ','belgrade':'BEG','sofia':'SOF','bucharest':'BUH','tirana':'TIA','skopje':'SKP','reykjavik':'REK','valletta':'MLA'};
+function getIATA(n){n=n.toLowerCase().trim();if(IATA[n])return IATA[n];var ks=Object.keys(IATA);for(var i=0;i<ks.length;i++){if(n.indexOf(ks[i])!==-1||ks[i].indexOf(n)!==-1)return IATA[ks[i]];}return null;}
+function buildFlights(destCity,d1,d2){
+  var dest=getIATA(destCity),out=skyD(d1),ret=skyD(d2);
+  var origins=[{code:'LJU',city:'Ljubljana',flag:'si',emoji:'🇸🇮'},{code:'ZAG',city:'Zagreb',flag:'hr',emoji:'🇭🇷'},{code:'VCE',city:'Benetke',flag:'it',emoji:'🇮🇹'},{code:'BUD',city:'Budimpešta',flag:'hu',emoji:'🇭🇺'},{code:'VIE',city:'Dunaj',flag:'at',emoji:'🇦🇹'}];
+  $$('fGrid').innerHTML=origins.map(function(o){
+    var url=dest?'https://www.skyscanner.net/transport/flights/'+o.code+'/'+dest+'/'+out+'/'+ret+'/?adults=2&cabinclass=economy':'https://www.google.com/travel/flights?q=Flights+from+'+o.city+'+to+'+encodeURIComponent(destCity);
+    return'<a href="'+url+'" target="_blank" class="fcard"><div class="fcs"><div class="fcity">'+o.emoji+' '+o.city+'</div><div class="fcode">'+o.code+'</div><div class="fdate"><i class="fas fa-plane-departure" style="color:var(--accent);font-size:10px"></i> '+fmtDate(d1)+'</div></div><div class="farr"><i class="fas fa-arrow-right"></i></div><div class="fcs"><div class="fcity">🌍 '+he(destCity)+'</div><div class="fcode">'+(dest||'—')+'</div><div class="fdate"><i class="fas fa-plane-arrival" style="color:var(--accent);font-size:10px"></i> '+fmtDate(d2)+'</div></div><i class="fas fa-external-link-alt fext"></i></a>';
+  }).join('');
+  $$('flightsSec').style.display='block';
+}
+
+// ═══════════════════════════════════════════════════
+//  STROŠKOVNIK
+// ═══════════════════════════════════════════════════
+var AIRPORTS={LJU:{lat:46.2237,lon:14.4576,city:'Ljubljana',flag:'🇸🇮'},ZAG:{lat:45.7429,lon:16.0688,city:'Zagreb',flag:'🇭🇷'},VCE:{lat:45.5053,lon:12.3519,city:'Benetke',flag:'🇮🇹'},BUD:{lat:47.4369,lon:19.2556,city:'Budimpešta',flag:'🇭🇺'},VIE:{lat:48.1103,lon:16.5697,city:'Dunaj',flag:'🇦🇹'}};
+
+// Seasonal flight price adjustment factor
+function seasonFactor(isoDate){
+  var m=new Date(isoDate+'T00:00:00').getMonth()+1; // 1-12
+  if(m>=6&&m<=8)  return 1.35; // peak summer
+  if(m===12||m===1) return 1.18; // holidays
+  if(m>=4&&m<=5||m>=9&&m<=10) return 1.0; // shoulder
+  return 0.82; // off-peak
+}
+function seasonLabel(isoDate){
+  var m=new Date(isoDate+'T00:00:00').getMonth()+1;
+  if(m>=6&&m<=8)  return'🌞 Poletna sezona (+35%)';
+  if(m===12||m===1) return'🎄 Praznična sezona (+18%)';
+  if(m>=4&&m<=5||m>=9&&m<=10) return'🍂 Vmesna sezona';
+  return'❄️ Zunaj sezone (-18%)';
+}
+
+// Base flight price range for round-trip per person
+function flightPriceBase(km){
+  if(km<300)  return{min:40,  max:110};
+  if(km<600)  return{min:55,  max:160};
+  if(km<1000) return{min:80,  max:220};
+  if(km<1500) return{min:110, max:300};
+  if(km<2500) return{min:150, max:400};
+  if(km<4000) return{min:210, max:560};
+  if(km<7000) return{min:330, max:800};
+  return             {min:480, max:1150};
+}
+function flightPriceRange(km,d1){
+  var base=flightPriceBase(km),sf=seasonFactor(d1);
+  return{min:Math.round(base.min*sf/10)*10, max:Math.round(base.max*sf/10)*10};
+}
+
+// Accommodation range hint
+var ACCOM={'london':[90,180],'paris':[70,140],'amsterdam':[85,170],'zurich':[100,200],'oslo':[100,190],'stockholm':[85,160],'copenhagen':[90,170],'geneva':[100,200],'brussels':[70,140],'rome':[65,130],'milan':[70,140],'florence':[70,140],'venice':[80,160],'naples':[55,110],'barcelona':[60,120],'madrid':[55,110],'lisbon':[55,110],'seville':[50,100],'berlin':[60,120],'munich':[75,150],'frankfurt':[70,140],'vienna':[65,130],'prague':[45,90],'budapest':[40,80],'warsaw':[40,80],'athens':[50,100],'dubrovnik':[70,140],'split':[50,100],'zadar':[45,90],'mykonos':[90,200],'santorini':[100,220],'rhodes':[55,110],'heraklion':[50,100],'istanbul':[40,90],'antalya':[35,80],'marrakech':[35,85],'cairo':[30,80],'dubai':[100,250],'tel aviv':[90,200],'new york':[150,350],'miami':[100,250],'los angeles':[120,280],'cancun':[70,180],'bangkok':[30,90],'bali':[30,100],'singapore':[100,250],'tokyo':[80,200],'hong kong':[100,250],'sydney':[100,220]};
+function accomHint(city){var c=city.toLowerCase(),ks=Object.keys(ACCOM);for(var i=0;i<ks.length;i++){if(c.indexOf(ks[i])!==-1||ks[i].indexOf(c)!==-1)return ACCOM[ks[i]];}return[50,120];}
+
+// Toll estimates by dest country (round trip €)
+var TOLLS={'hr':40,'it':80,'fr':140,'es':120,'pt':100,'at':25,'ch':50,'pl':30,'cz':25,'sk':25,'hu':30,'ro':30,'bg':30,'rs':25,'gr':50,'tr':30,'de':0,'nl':0,'be':0,'dk':0,'se':0,'no':0,'fi':0,'gb':0,'ie':0};
+function tollEst(cc){return TOLLS[cc.toLowerCase()]||50;}
+
+function buildCostSection(){
+  if(!trip)return;
+  $$('costSec').style.display='block';
+  var n=nts(trip.d1,trip.d2);
+  $$('costSub').textContent='Ocenjeni stroški za 2 osebi · '+n+' noči';
+  var html=transport==='plane'?buildFlightPrices():buildCarSection();
+  var hint=accomHint(trip.city);
+  html+='<div class="cost-inputs">'
+    +'<div class="ci-card"><div class="ci-label">🏨 Nastanitev</div><div class="ci-iw"><div class="ci-eur">€</div><input type="number" id="accomPrice" placeholder="cena / noč" min="0" oninput="recalcTotal()"></div><div class="ci-hint"><i class="fas fa-lightbulb"></i> Predlog za '+he(trip.city)+': €'+hint[0]+' – €'+hint[1]+'/noč</div><div class="ci-calc" id="accomCalc"></div></div>'
+    +'<div class="ci-card"><div class="ci-label">🍽️ Dnevni budget</div><div class="ci-iw"><div class="ci-eur">€</div><input type="number" id="dayBudget" placeholder="€ / oseba / dan" min="0" oninput="recalcTotal()"></div><div class="ci-hint"><i class="fas fa-lightbulb"></i> Hrana, aktivnosti, prevoz na kraju</div><div class="ci-calc" id="dayCalc"></div></div>'
+    +'</div>'
+    +'<div class="cost-total" id="costTotal"><div style="font-size:13px;color:var(--text-muted);text-align:center;padding:8px 0">Vnesi cene nastanitve in dnevni budget za izračun skupnih stroškov.</div></div>';
+  $$('costBody').innerHTML=html;
+  if(transport==='car')setTimeout(calcCarRoute,300);
+}
+
+function buildFlightPrices(){
+  var codes=Object.keys(AIRPORTS),sl=seasonLabel(trip.d1);
+  var html='<div class="fp-grid">';
+  codes.forEach(function(code,idx){
+    var ap=AIRPORTS[code];
+    var km=Math.round(haversine(ap.lat,ap.lon,trip.lat,trip.lon));
+    var pr=flightPriceRange(km,trip.d1);
+    var dest=getIATA(trip.city)||'anywhere';
+    var skyUrl=dest!=='anywhere'
+      ?'https://www.skyscanner.net/transport/flights/'+code+'/'+dest+'/'+skyD(trip.d1)+'/'+skyD(trip.d2)+'/?adults=2&cabinclass=economy'
+      :'https://www.google.com/travel/flights?q=Flights+from+'+ap.city+'+to+'+encodeURIComponent(trip.city);
+    html+='<div class="fp-card" id="fpc'+idx+'" onclick="selectFlight('+idx+','+pr.min+','+pr.max+')">'
+      +'<div class="fp-flag">'+ap.flag+'</div>'
+      +'<div class="fp-info"><div class="fp-route">'+ap.city+' ('+code+') → '+he(trip.city)+'</div>'
+      +'<div class="fp-dist">'+km.toLocaleString('sl-SI')+' km · Skyscanner ocena z upoštevanjem sezone</div></div>'
+      +'<div class="fp-price-wrap"><div class="fp-price">€'+pr.min+' – €'+pr.max+'</div>'
+      +'<div class="fp-pp">na osebo · povratna karta</div>'
+      +'<a href="'+skyUrl+'" target="_blank" class="fp-sky" onclick="event.stopPropagation()"><i class="fas fa-search"></i> Preveri na Skyscanner</a>'
+      +'</div><div class="fp-check" id="fpchk'+idx+'"></div></div>';
+  });
+  html+='</div><div class="fp-season-note"><i class="fas fa-calendar-alt"></i> '+sl+' · Cene so ocene na podlagi razdalje in sezone. Za pravo ceno klikni Skyscanner.</div>';
+  return html;
+}
+
+function selectFlight(idx,pmin,pmax){
+  var codes=Object.keys(AIRPORTS);
+  codes.forEach(function(_,i){
+    var card=$$('fpc'+i),chk=$$('fpchk'+i);
+    if(!card)return;
+    if(i===idx){if(card.classList.contains('selected')){card.classList.remove('selected');chk.innerHTML='';selFlight=-1;selFlightCost=0;}else{card.classList.add('selected');chk.innerHTML='<i class="fas fa-check"></i>';selFlight=idx;selFlightCost=Math.round((pmin+pmax)/2);}}
+    else{card.classList.remove('selected');chk.innerHTML='';}
+  });
+  recalcTotal();
+}
+
+function buildCarSection(){
+  return'<div class="car-from-row"><label><i class="fas fa-map-marker-alt" style="color:var(--secondary)"></i> Začetna točka:</label><input type="text" id="carFrom" value="Ljubljana, Slovenija" placeholder="Mesto odhoda"><button class="btn-calc-route" onclick="calcCarRoute()"><i class="fas fa-route"></i> Izračunaj pot</button></div><div id="carResult"><div class="ml"><div class="msp"></div>Izračunavam pot…</div></div>';
+}
+
+function calcCarRoute(){
+  var fromInput=$$('carFrom');if(!fromInput)return;
+  var fromCity=fromInput.value.trim()||'Ljubljana, Slovenija';
+  var carRes=$$('carResult');if(carRes)carRes.innerHTML='<div class="ml"><div class="msp"></div>Iščem pot iz '+he(fromCity)+'…</div>';
+  fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(fromCity)+'&count=1&language=en&format=json',{},8000)
+    .then(function(r){return r.json();})
+    .then(function(gd){
+      if(!gd.results||!gd.results.length)throw new Error('Začetnega mesta ni mogoče najti.');
+      var from=gd.results[0];
+      return fetchT('https://router.project-osrm.org/route/v1/driving/'+from.longitude+','+from.latitude+';'+trip.lon+','+trip.lat+'?overview=false',{},15000)
+        .then(function(r){return r.json();})
+        .then(function(od){
+          if(!od.routes||!od.routes.length)throw new Error('Pot ni bila najdena (destinacija je morda na otoku ali onkraj oceana).');
+          var distKm=Math.round(od.routes[0].distance/1000),durH=Math.round(od.routes[0].duration/3600*10)/10,roundKm=distKm*2;
+          var fuel=Math.round((roundKm/100)*fuelL*fuelPrice),tolls=tollEst(trip.country_code||''),parking=Math.round(nts(trip.d1,trip.d2)*12);
+          carTotal=fuel+tolls+parking;
+          renderCarResult(from.name,distKm,roundKm,durH,fuel,tolls,parking,carTotal);
+          recalcTotal();
+        });
+    }).catch(function(e){carTotal=0;if($$('carResult'))$$('carResult').innerHTML='<p style="color:var(--secondary);font-size:13px;padding:8px 0">⚠️ '+(e.message||'Napaka pri izračunu.')+'</p>';});
+}
+
+function renderCarResult(fromCity,oneKm,roundKm,durH,fuel,tolls,parking,total){
+  var n=nts(trip.d1,trip.d2);
+  $$('carResult').innerHTML='<div class="car-result">'
+    +'<div class="car-row"><div class="car-row-label"><span class="ci">📍</span><div>Iz '+he(fromCity)+'<div class="car-row-sub">Enosmerno · '+oneKm.toLocaleString('sl-SI')+' km · '+durH+'h</div></div></div><div class="car-row-value">'+roundKm.toLocaleString('sl-SI')+' km skupaj</div></div>'
+    +'<div class="car-row"><div class="car-row-label"><span class="ci">🔥</span><div>Gorivo<div class="car-row-sub car-row-sub-live"><span class="fuel-edit"><input id="fuelL_in" type="number" value="'+fuelL+'" min="3" max="20" step="0.5" oninput="updateFuel('+roundKm+','+tolls+','+parking+')"> L/100km · <input id="fuelP_in" type="number" value="'+fuelPrice+'" min="1" max="3" step="0.05" oninput="updateFuel('+roundKm+','+tolls+','+parking+')"> €/L</span></div></div></div><div class="car-row-value" id="fuelVal">'+fmtEur(fuel)+'</div></div>'
+    +'<div class="car-row"><div class="car-row-label"><span class="ci">🛣️</span><div>Cestnine (ocena)<div class="car-row-sub">Povratno · po ciljni državi</div></div></div><div class="car-row-value">~'+fmtEur(tolls)+'</div></div>'
+    +'<div class="car-row"><div class="car-row-label"><span class="ci">🅿️</span><div>Parkiranje (ocena)<div class="car-row-sub">'+n+' dni × ~€12/dan</div></div></div><div class="car-row-value">~'+fmtEur(parking)+'</div></div>'
+    +'<div class="car-row tot-row"><div class="car-row-label"><span class="ci">🚗</span><div><b>Skupaj avto</b></div></div><div class="car-row-value" id="carTotalVal">~'+fmtEur(total)+'</div></div>'
+    +'</div>';
+}
+function updateFuel(roundKm,tolls,parking){
+  var li=$$('fuelL_in'),pi=$$('fuelP_in');if(!li||!pi)return;
+  fuelL=parseFloat(li.value)||7;fuelPrice=parseFloat(pi.value)||1.65;
+  var newFuel=Math.round((roundKm/100)*fuelL*fuelPrice);
+  carTotal=newFuel+tolls+parking;
+  if($$('fuelVal'))$$('fuelVal').textContent=fmtEur(newFuel);
+  if($$('carTotalVal'))$$('carTotalVal').textContent='~'+fmtEur(carTotal);
+  recalcTotal();
+}
+
+function recalcTotal(){
+  var totalEl=$$('costTotal');if(!totalEl||!trip)return;
+  var n=nts(trip.d1,trip.d2);
+  var transportCost=0,transportLabel='',transportNote='';
+  if(transport==='plane'){
+    if(selFlight>=0){
+      transportCost=selFlightCost*2;
+      var codes=Object.keys(AIRPORTS),ap=AIRPORTS[codes[selFlight]];
+      transportLabel=fmtEur(transportCost);
+      transportNote='Letalo iz '+ap.city+' · obe osebi skupaj · povratno';
+    }else{transportLabel='<span class="na">Izberi letalo ↑</span>';}
+  }else{
+    if(carTotal>0){transportCost=carTotal;transportLabel='~'+fmtEur(carTotal);transportNote='Gorivo + cestnine + parkiranje';}
+    else{transportLabel='<span class="na">Izračunaj pot ↑</span>';}
+  }
+  var accomEl=$$('accomPrice'),accomCost=0,accomLabel='<span class="na">Vnesi ceno ↑</span>';
+  if(accomEl&&accomEl.value){accomCost=parseFloat(accomEl.value)*n;accomLabel=fmtEur(accomCost);}
+  var accomCalcEl=$$('accomCalc');if(accomCalcEl)accomCalcEl.textContent=accomCost?fmtEur(accomCost)+' ('+n+' noči)':'';
+  var dayEl=$$('dayBudget'),dayCost=0,dayLabel='<span class="na">Vnesi budget ↑</span>';
+  if(dayEl&&dayEl.value){dayCost=parseFloat(dayEl.value)*n*2;dayLabel=fmtEur(dayCost);}
+  var dayCalcEl=$$('dayCalc');if(dayCalcEl)dayCalcEl.textContent=dayCost?fmtEur(dayCost)+' (2 osebi × '+n+' dni)':'';
+  var grand=transportCost+accomCost+dayCost,pp=grand/2;
+  totalEl.innerHTML='<div class="ct-title"><i class="fas fa-calculator"></i> Skupni stroškovnik</div>'
+    +'<div class="ct-rows"><div class="ct-row"><div class="cr-l">'+(transport==='plane'?'✈️ Letalske karte (2 osebi)':'🚗 Avto (gorivo + cestnine + park.)')+'</div><div class="cr-v">'+transportLabel+'</div></div>'
+    +(transportNote?'<div class="ct-row"><div class="cr-l" style="font-size:11px;padding-left:20px">'+transportNote+'</div></div>':'')
+    +'<div class="ct-row"><div class="cr-l">🏨 Nastanitev ('+n+' noči)</div><div class="cr-v">'+accomLabel+'</div></div>'
+    +'<div class="ct-row"><div class="cr-l">🍽️ Dnevni budget ('+n+' dni × 2)</div><div class="cr-v">'+dayLabel+'</div></div>'
+    +'</div><hr class="ct-div">'
+    +'<div class="ct-grand"><div class="ct-grand-label">SKUPAJ</div><div class="ct-grand-value">'+(grand>0?fmtEur(grand):'—')+'</div></div>'
+    +(grand>0?'<div class="ct-pp">Na osebo: <span>'+fmtEur(pp)+'</span></div>':'');
+}
+
+// ── AUTOCOMPLETE ──────────────────────────────────
+var acTimer=null, acData=[], acIdx=-1;
+
+// Slovenian country names
+var CSL={'IT':'Italija','FR':'Francija','ES':'Španija','PT':'Portugalska','DE':'Nemčija','AT':'Avstrija','CH':'Švica','NL':'Nizozemska','BE':'Belgija','GR':'Grčija','HR':'Hrvaška','PL':'Poljska','CZ':'Češka','HU':'Madžarska','SK':'Slovaška','SI':'Slovenija','RS':'Srbija','ME':'Črna gora','AL':'Albanija','MK':'Sev. Makedonija','BG':'Bolgarija','RO':'Romunija','TR':'Turčija','GB':'Velika Britanija','IE':'Irska','DK':'Danska','SE':'Švedska','NO':'Norveška','FI':'Finska','EE':'Estonija','LV':'Latvija','LT':'Litva','LU':'Luksemburg','MT':'Malta','CY':'Ciper','IS':'Islandija','BA':'Bosna in Hercegovina','US':'ZDA','CA':'Kanada','MX':'Mehika','AU':'Avstralija','NZ':'Nova Zelandija','JP':'Japonska','CN':'Kitajska','KR':'J. Koreja','TH':'Tajska','ID':'Indonezija','SG':'Singapur','MY':'Malezija','HK':'Hongkong','AE':'ZAE','IL':'Izrael','EG':'Egipt','MA':'Maroko','TN':'Tunizija','UA':'Ukrajina','BR':'Brazilija','AR':'Argentina'};
+function cName(cc){return CSL[cc]||cc;}
+
+// Score: higher = better match. Prefers exact name match + European countries.
+var EURO=['IT','FR','ES','PT','DE','AT','CH','NL','BE','GR','HR','PL','CZ','HU','SK','SI','RS','ME','AL','MK','BG','RO','TR','GB','IE','DK','SE','NO','FI','EE','LV','LT','LU','MT','CY','IS','BA','MD','BY','UA','RU','LI','AD','MC','SM'];
+function acScore(r,q){
+  var s=0, name=(r.name||'').toLowerCase(), ql=q.toLowerCase();
+  if(name===ql)           s+=120;  // exact match (e.g. "Milano" == "Milano")
+  else if(name.startsWith(ql)) s+=70;
+  else if(name.indexOf(ql)!==-1)   s+=35;
+  if(EURO.indexOf((r.country_code||'').toUpperCase())!==-1) s+=40; // European bonus
+  if(r.population) s+=Math.min(Math.log10(r.population+1)*6, 35); // bigger city = higher
+  return s;
+}
+
+function acOnInput(){
+  var q=$$('cityIn').value.trim();
+  acIdx=-1;
+  clearTimeout(acTimer);
+  if(q.length<2){acHide();return;}
+  acTimer=setTimeout(function(){acFetch(q);},280);
+}
+
+function acFetch(q){
+  // Fetch more results (10) so sorting has enough candidates
+  fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=10&language=sl&format=json',{},5000)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var res=d.results||[];
+      // Sort by custom score: exact European match wins over US/remote cities
+      res.sort(function(a,b){return acScore(b,q)-acScore(a,q);});
+      acData=res.slice(0,7);
+      acRender();
+    })
+    .catch(function(){acHide();});
+}
+
+function acRender(){
+  var dd=$$('acDrop');
+  if(!dd||!acData.length){acHide();return;}
+  dd.innerHTML=acData.map(function(r,i){
+    var cc=(r.country_code||'').toUpperCase();
+    var fl=cc?'<img src="https://flagcdn.com/20x15/'+cc.toLowerCase()+'.png" width="20" height="15">':'🌍';
+    var country=cName(cc)||r.country||'';
+    var meta=[r.admin1,country].filter(Boolean).join(', ');
+    return'<div class="ac-item" id="aci'+i+'" onclick="acSelect('+i+')" onmouseenter="acSetIdx('+i+')">'
+      +'<div class="ac-flag">'+fl+'</div>'
+      +'<div><div class="ac-city">'+he(r.name)+'</div>'
+      +(meta?'<div class="ac-meta">'+he(meta)+'</div>':'')
+      +'</div></div>';
+  }).join('');
+  dd.classList.add('show');
+}
+
+function acHide(){var dd=$$('acDrop');if(dd){dd.classList.remove('show');dd.innerHTML='';}}
+function acSetIdx(i){acIdx=i;var items=$$('acDrop').querySelectorAll('.ac-item');items.forEach(function(el,j){el.classList.toggle('hi',j===i);});}
+
+function acSelect(i){
+  var r=acData[i];if(!r)return;
+  $$('cityIn').value=r.name;
+  acHide();acIdx=-1;
+}
+
+function acKeydown(e){
+  var dd=$$('acDrop');
+  if(!dd||!dd.classList.contains('show')){if(e.key==='Enter')go();return;}
+  if(e.key==='ArrowDown'){e.preventDefault();acSetIdx(Math.min(acIdx+1,acData.length-1));}
+  else if(e.key==='ArrowUp'){e.preventDefault();acSetIdx(Math.max(acIdx-1,0));}
+  else if(e.key==='Enter'){e.preventDefault();if(acIdx>=0){acSelect(acIdx);}else{acHide();go();}}
+  else if(e.key==='Escape'){acHide();}
+}
+
+document.addEventListener('click',function(e){
+  var w=$$('acWrap');if(w&&!w.contains(e.target))acHide();
+});
+
+// ── GEOCODING ─────────────────────────────────────
+function geocode(city){
+  return fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=3&language=en&format=json',{},10000)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.results||!data.results.length)throw new Error('Mesta "<b>'+he(city)+'</b>" ni mogoče najti. Preveri pravopis ali poskusi v angleščini.');
+      return data.results[0];
+    });
+}
+
+// ── MAIN SEARCH ───────────────────────────────────
+function go(){
+  var city=$$('cityIn').value.trim(),d1=$$('d1').value,d2=$$('d2').value;
+  if(!city){toast('Vnesi destinacijo 🗺️','warn');return;}
+  if(!d1||!d2){toast('Izberi datume ✈️','warn');return;}
+  if(d1>=d2){toast('Datum odhoda mora biti pred prihodom','warn');return;}
+  hideErr();setLoader(true,'Iščem '+city+'…');
+  $$('results').style.display='none';
+  $$('flightsSec').style.display='none';
+  $$('costSec').style.display='none';
+  $$('nbhdSec').style.display='none';
+  selFlight=-1;selFlightCost=0;carTotal=0;
+
+  geocode(city).then(function(geo){
+    var lat=geo.latitude,lon=geo.longitude,name=geo.name,country=geo.country||'',cc=geo.country_code||'',admin1=geo.admin1||'',n=nts(d1,d2);
+    trip={city:name,country:country,country_code:cc,lat:lat,lon:lon,d1:d1,d2:d2,transport:transport};
+
+    $$('rTitle').textContent=name+(country?', '+country:'');
+    $$('rDates').textContent=fmtDate(d1)+' → '+fmtDate(d2);
+    $$('rBadges').innerHTML='<span class="badge"><i class="fas fa-moon"></i> '+n+' noč'+(n===1?'':'i')+'</span><span class="badge"><i class="fas fa-users"></i> 2 osebi</span>'+(admin1?'<span class="badge"><i class="fas fa-map"></i> '+he(admin1)+'</span>':'')+'<span class="badge"><i class="fas fa-'+(transport==='plane'?'plane':'car')+'"></i> '+(transport==='plane'?'Z letalom':'Z avtom')+'</span>';
+
+    wlUpdateBtn();setLoader(false);
+    $$('results').style.display='block';
+    $$('btnHome').classList.add('show');
+    setTimeout(function(){$$('results').scrollIntoView({behavior:'smooth',block:'start'});},100);
+
+    $$('wGrid').innerHTML='<div class="ml"><div class="msp"></div>Nalagam napoved za termin…</div>';
+    $$('restList').innerHTML='<div class="ml"><div class="msp"></div>Iščem restavracije…</div>';
+    $$('sightList').innerHTML='<div class="ml"><div class="msp"></div>Iščem znamenitosti…</div>';
+    $$('nbhdGrid').innerHTML='<div class="ml"><div class="msp"></div>Iščem zanimive četrti…</div>';
+
+    buildAccom(name,d1,d2);
+    if(transport==='plane')buildFlights(name,d1,d2);
+    buildCostSection();
+    loadWeather(lat,lon,name,d1,d2);
+
+    loadWikivoyage(name)
+      .then(function(data){
+        renderPlaces(data.restaurants,'restList','rest',name,data.article);
+        renderPlaces(data.sights,'sightList','sight',name,data.article);
+        renderDistricts(data.districts,name,data.article);
+      })
+      .catch(function(){
+        $$('restList').innerHTML=fbLinks('rest',name);
+        $$('sightList').innerHTML=fbLinks('sight',name);
+        $$('nbhdSec').style.display='none';
+      });
+  }).catch(function(e){setLoader(false);showErr('<strong>Napaka</strong><br>'+(e.message||'Preveri internetno povezavo.'));});
+}
+
+// ── HOME ──────────────────────────────────────────
+function goHome(){
+  trip=null;selFlight=-1;selFlightCost=0;carTotal=0;
+  $$('cityIn').value='';
+  var today=new Date(),d1=new Date(today),d2;
+  d1.setMonth(today.getMonth()+1);d2=new Date(d1);d2.setDate(d1.getDate()+5);
+  $$('d1').value=d1.toISOString().slice(0,10);
+  $$('d2').value=d2.toISOString().slice(0,10);
+  $$('results').style.display='none';
+  $$('btnHome').classList.remove('show');
+  hideErr();
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(function(){ $$('cityIn').focus(); },400);
+}
+
+// ── WISHLIST ──────────────────────────────────────
+function inWl(){return trip&&wl.some(function(t){return t.city===trip.city&&t.d1===trip.d1&&t.d2===trip.d2;});}
+function wlUpdateBtn(){var b=$$('wlBtn');if(inWl()){b.className='btn-wl saved';b.innerHTML='<i class="fas fa-check"></i> Na Wish Listu!';}else{b.className='btn-wl';b.innerHTML='<i class="fas fa-heart"></i> Dodaj na Wish List';}}
+function wlToggle(){
+  if(!trip)return;
+  if(inWl()){wl=wl.filter(function(t){return!(t.city===trip.city&&t.d1===trip.d1&&t.d2===trip.d2);});toast('Odstranjeno','info');}
+  else{wl.unshift(Object.assign({},trip,{addedAt:new Date().toISOString()}));toast(trip.city+' dodano! 💝','ok');if(!$$('wlBody').classList.contains('open'))wlPanel();}
+  try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}
+  wlUpdateBtn();renderWl();
+}
+function wlDel(i){wl.splice(i,1);try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}renderWl();wlUpdateBtn();toast('Odstranjeno','info');}
+function wlLoad(i){var t=wl[i];$$('cityIn').value=t.city;$$('d1').value=t.d1;$$('d2').value=t.d2;if(t.transport){transport=t.transport;var tr=$$('tTog');tr.classList.toggle('car',transport==='car');tr.classList.toggle('plane',transport==='plane');}window.scrollTo({top:0,behavior:'smooth'});setTimeout(go,400);}
+function wlPanel(){$$('wlBody').classList.toggle('open');$$('wlChev').classList.toggle('open');if($$('wlBody').classList.contains('open'))renderWl();}
+function renderWl(){
+  $$('wlCount').textContent='Shranjenih potovanj: '+wl.length;
+  var c=$$('wlContent');
+  if(!wl.length){c.innerHTML='<div class="wl-empty"><i class="fas fa-heart-broken"></i><p>Wish list je še prazen.<br>Poišči destinacijo in jo dodaj! ✈️</p></div>';return;}
+  c.innerHTML='<div class="wl-grid">'+wl.map(function(t,i){
+    var n=nts(t.d1,t.d2),fl=t.country_code?'<img src="https://flagcdn.com/20x15/'+t.country_code.toLowerCase()+'.png" style="border-radius:2px;vertical-align:middle"> ':'',tr=t.transport==='plane'?'✈️ Z letalom':'🚗 Z avtom';
+    return'<div class="wc"><div class="wc-top"><div><div class="wc-city">'+fl+he(t.city)+'</div><div class="wc-sub">'+he(t.country||'')+'</div></div><button class="wc-del" onclick="wlDel('+i+')"><i class="fas fa-times"></i></button></div><div class="wc-date"><i class="fas fa-plane-departure"></i>'+fmtDate(t.d1)+'</div><div class="wc-date"><i class="fas fa-plane-arrival"></i>'+fmtDate(t.d2)+'</div><div class="wc-meta">🌙 '+n+' noč'+(n===1?'':'i')+' · '+tr+'</div><button class="wc-load" onclick="wlLoad('+i+')"><i class="fas fa-search"></i> Naloži & Poišči</button></div>';
+  }).join('')+'</div>';
+}
+
+// ── INIT ──────────────────────────────────────────
+(function(){
+  var today=new Date(),d1=new Date(today),d2;
+  d1.setMonth(today.getMonth()+1);d2=new Date(d1);d2.setDate(d1.getDate()+5);
+  $$('d1').value=d1.toISOString().slice(0,10);$$('d2').value=d2.toISOString().slice(0,10);
+  $$('wlCount').textContent='Shranjenih potovanj: '+wl.length;
+  $$('cityIn').addEventListener('input', acOnInput);
+  $$('cityIn').addEventListener('keydown', acKeydown);
+})();
+</script>
+</body>
+</html>
