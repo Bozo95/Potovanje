@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root{--primary:#6C63FF;--primary-light:#8B85FF;--secondary:#FF6584;--accent:#43C6AC;--bg:#0F0E17;--surface:#1A1929;--surface2:#232235;--surface3:#2D2C42;--text:#FFFFFE;--text-muted:#A7A9BE;--border:rgba(108,99,255,0.2);--shadow:0 8px 32px rgba(0,0,0,0.4);--radius:16px}
     *{box-sizing:border-box;margin:0;padding:0}
@@ -253,6 +255,26 @@
     .ic-cost{background:linear-gradient(135deg,rgba(108,99,255,.2),rgba(67,198,172,.1))} .ic-cost i{color:var(--primary-light)}
     hr.div{border:none;border-top:1px solid var(--border);margin:28px 0}
 
+    /* ── ZEMLJEVID ── */
+    .ic-map{background:rgba(67,198,172,.15)} .ic-map i{color:var(--accent)}
+    #mapEl{height:380px;width:100%;position:relative;z-index:1;background:var(--surface2)}
+    @media(max-width:768px){#mapEl{height:260px}}
+    /* Leaflet kontrole — dark tema */
+    .leaflet-control-zoom a{background:var(--surface2)!important;color:var(--text)!important;border-color:var(--border)!important;font-weight:700!important}
+    .leaflet-control-zoom a:hover{background:var(--surface3)!important;color:var(--primary-light)!important}
+    .leaflet-control-attribution{background:rgba(15,14,23,.7)!important;color:var(--text-muted)!important;font-size:10px!important;backdrop-filter:blur(4px)}
+    .leaflet-control-attribution a{color:var(--primary-light)!important}
+    .leaflet-popup-content-wrapper{background:var(--surface2)!important;border:1px solid var(--border)!important;border-radius:12px!important;box-shadow:0 8px 32px rgba(0,0,0,.5)!important;color:var(--text)!important;padding:0!important}
+    .leaflet-popup-content{margin:12px 16px!important;font-family:'Inter',sans-serif!important}
+    .leaflet-popup-tip{background:var(--surface2)!important}
+    .leaflet-popup-close-button{color:var(--text-muted)!important;font-size:16px!important;padding:6px 8px!important}
+    .map-popup-city{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text)}
+    .map-popup-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+    /* Pulzirajoči marker */
+    .map-marker-wrap{position:relative;width:40px;height:40px}
+    .map-marker{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;border:3px solid rgba(255,255,255,.85);box-shadow:0 0 0 0 rgba(108,99,255,.6);animation:mapPulse 2s ease-out infinite;display:flex;align-items:center;justify-content:center;font-size:18px}
+    @keyframes mapPulse{0%{box-shadow:0 0 0 0 rgba(108,99,255,.6)}70%{box-shadow:0 0 0 14px rgba(108,99,255,0)}100%{box-shadow:0 0 0 0 rgba(108,99,255,0)}}
+
     /* ══════════════════════════════
        MOBILE — do 768px
     ══════════════════════════════ */
@@ -410,6 +432,15 @@
         <div class="badges" id="rBadges"></div>
       </div>
       <button class="btn-wl" id="wlBtn" onclick="wlToggle()"><i class="fas fa-heart"></i> Dodaj na Wish List</button>
+    </div>
+
+    <!-- ZEMLJEVID -->
+    <div class="sc" id="mapSec" style="display:none;margin-bottom:24px">
+      <div class="sc-head">
+        <div class="sc-icon ic-map"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="sc-ht"><h3 id="mapHeading">Destinacija</h3><p>Interaktivni zemljevid · povleci in zoomiraj</p></div>
+      </div>
+      <div id="mapEl"></div>
     </div>
 
     <!-- WEATHER -->
@@ -982,6 +1013,59 @@ document.addEventListener('click',function(e){
   var w=$$('acWrap');if(w&&!w.contains(e.target))acHide();
 });
 
+// ── ZEMLJEVID ─────────────────────────────────────
+var leafMap = null;
+
+function initMap(lat, lon, cityName, country) {
+  var sec = $$('mapSec');
+  sec.style.display = 'block';
+  $$('mapHeading').textContent = cityName + (country ? ', ' + country : '');
+
+  // Počisti star zemljevid
+  if (leafMap) { leafMap.remove(); leafMap = null; }
+
+  // Počakamo da je container viden, nato inicializiramo
+  setTimeout(function() {
+    leafMap = L.map('mapEl', {
+      center: [lat, lon],
+      zoom: 12,
+      zoomControl: true,
+      scrollWheelZoom: false  // ne zooma pri scrollu strani
+    });
+
+    // Dark CartoDB tile sloj — brez API ključa
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
+      maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>'
+    }).addTo(leafMap);
+
+    // Pulzirajoči custom marker
+    var markerIcon = L.divIcon({
+      html: '<div class="map-marker-wrap"><div class="map-marker">✈️</div></div>',
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      popupAnchor: [0, -24],
+      className: ''
+    });
+
+    // Popup vsebina
+    var popupHtml = '<div class="map-popup-city">' + he(cityName) + '</div>'
+      + (country ? '<div class="map-popup-sub"><i class="fas fa-globe" style="color:var(--accent);margin-right:5px"></i>' + he(country) + '</div>' : '')
+      + '<div class="map-popup-sub" style="margin-top:6px"><i class="fas fa-map-pin" style="color:var(--secondary);margin-right:5px"></i>'
+      + lat.toFixed(4) + ', ' + lon.toFixed(4) + '</div>';
+
+    L.marker([lat, lon], { icon: markerIcon })
+      .addTo(leafMap)
+      .bindPopup(popupHtml, { maxWidth: 220, className: '' })
+      .openPopup();
+
+    // Kliknemo zunaj popupa → zapremo
+    leafMap.on('click', function() { leafMap.closePopup(); });
+
+  }, 150);
+}
+
 // ── GEOCODING ─────────────────────────────────────
 function geocode(city){
   return fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=3&language=en&format=json',{},10000)
@@ -1015,6 +1099,8 @@ function go(){
     wlUpdateBtn();setLoader(false);
     $$('results').style.display='block';
     $$('btnHome').classList.add('show');
+    // Inicializiraj zemljevid z koordinatami destinacije
+    initMap(lat, lon, name, country);
     setTimeout(function(){$$('results').scrollIntoView({behavior:'smooth',block:'start'});},100);
 
     $$('wGrid').innerHTML='<div class="ml"><div class="msp"></div>Nalagam napoved za termin…</div>';
@@ -1048,6 +1134,8 @@ function goHome(){
   $$('d2').value=d2.toISOString().slice(0,10);
   $$('results').style.display='none';
   $$('btnHome').classList.remove('show');
+  if(leafMap){leafMap.remove();leafMap=null;}
+  $$('mapSec').style.display='none';
   hideErr();
   window.scrollTo({top:0,behavior:'smooth'});
   setTimeout(function(){ $$('cityIn').focus(); },400);
