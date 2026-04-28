@@ -133,19 +133,6 @@
     .fbl a:hover{border-color:var(--primary);background:var(--surface3)}
     .fbl a i{color:var(--primary-light);width:16px}
 
-    /* ── COOL ČETRTI ── */
-    .nbhd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-    @media(max-width:900px){.nbhd-grid{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:600px){.nbhd-grid{grid-template-columns:repeat(2,1fr)}}
-    .nbhd-card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:20px 16px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--text)}
-    .nbhd-card:hover{border-color:var(--primary);background:var(--surface3);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
-    .nbhd-emoji{font-size:36px;line-height:1}
-    .nbhd-name{font-weight:800;font-size:15px;font-family:'Playfair Display',serif;margin-top:4px}
-    .nbhd-vibe{font-size:11px;font-weight:700;color:var(--primary-light);text-transform:uppercase;letter-spacing:.6px}
-    .nbhd-desc{font-size:12px;color:var(--text-muted);line-height:1.6;flex:1}
-    .nbhd-gm{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--accent);margin-top:6px;font-weight:600}
-    .nbhd-gm i{font-size:10px}
-    .ic-n{background:linear-gradient(135deg,rgba(255,101,132,.15),rgba(108,99,255,.1))}
     .ic-n i{color:var(--secondary)}
 
     /* ── STROŠKOVNIK ── */
@@ -328,9 +315,6 @@
       .two-col{grid-template-columns:1fr;gap:16px}
 
       /* ── COOL ČETRTI ─────────────────────────── */
-      .nbhd-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-      .nbhd-card{padding:14px 12px}
-      .nbhd-emoji{font-size:28px}
 
       /* ── STROŠKOVNIK — LETALA ────────────────── */
       .fp-card{flex-wrap:wrap;gap:8px;padding:14px}
@@ -367,7 +351,6 @@
     ══════════════════════════════ */
     @media(max-width:420px){
       h1{font-size:clamp(20px,7vw,30px)}
-      .nbhd-grid{grid-template-columns:1fr 1fr}
       .badges{gap:6px}
       .badge{font-size:11px;padding:4px 10px}
       .dest-info h2{font-size:20px}
@@ -465,16 +448,6 @@
       </div>
     </div>
 
-    <!-- COOL ČETRTI -->
-    <div class="sc" id="nbhdSec" style="display:none;margin-top:24px">
-      <div class="sc-head">
-        <div class="sc-icon ic-n"><i class="fas fa-map-marked-alt"></i></div>
-        <div class="sc-ht"><h3>Top 5 Cool Delov Mesta</h3><p id="nbhdSrc">Must-see četrti &amp; področja · Wikivoyage</p></div>
-      </div>
-      <div class="sc-body">
-        <div class="nbhd-grid" id="nbhdGrid"><div class="ml"><div class="msp"></div>Iščem zanimive četrti…</div></div>
-      </div>
-    </div>
 
     <!-- STROŠKOVNIK -->
     <div class="sc" id="costSec" style="display:none;margin-top:24px">
@@ -692,45 +665,63 @@ function renderPlaces(list,cid,type,city,article){
   if(!list||!list.length){el.innerHTML=fbLinks(type,city);return;}
   var html=list.map(function(p,i){
     var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.name+' '+city);
-    return'<div class="place"><div class="pem">'+(emojis[i]||'✨')+'</div><div class="pi"><strong><a href="'+gm+'" target="_blank">'+he(p.name)+' <i class="fas fa-external-link-alt" style="font-size:9px;color:var(--text-muted)"></i></a></strong>'+(p.desc?'<div class="pdesc">'+he(p.desc.slice(0,160))+(p.desc.length>160?'…':'')+'</div>':'')+'<div class="ptags">'+(p.address?'<span class="ptag">📍 '+he(p.address)+'</span>':'')+(p.hours?'<span class="ptag">🕐 '+he(p.hours.split(';')[0])+'</span>':'')+(p.price?'<span class="ptag">💶 '+he(p.price)+'</span>':'')+(p.url?'<span class="ptag"><a href="'+p.url+'" target="_blank">🔗 Spletna stran</a></span>':'')+'</div></div></div>';
+    // Primarni link: direktna spletna stran če obstaja, sicer Google Maps
+    var primaryUrl=p.url||gm;
+    return'<div class="place"><div class="pem">'+(emojis[i]||'✨')+'</div><div class="pi">'
+      +'<strong><a href="'+primaryUrl+'" target="_blank">'+he(p.name)
+      +' <i class="fas fa-external-link-alt" style="font-size:9px;color:var(--text-muted)"></i></a></strong>'
+      +(p.desc?'<div class="pdesc">'+he(p.desc.slice(0,160))+(p.desc.length>160?'…':'')+'</div>':'')
+      +'<div class="ptags">'
+      +(p.address?'<span class="ptag">📍 '+he(p.address)+'</span>':'')
+      +(p.hours?'<span class="ptag">🕐 '+he(p.hours.split(';')[0])+'</span>':'')
+      +(p.price?'<span class="ptag">💶 '+he(p.price)+'</span>':'')
+      +(p.url?'<span class="ptag"><a href="'+gm+'" target="_blank"><i class="fab fa-google" style="font-size:10px"></i> Google Maps</a></span>'
+             :'<span class="ptag"><a href="'+gm+'" target="_blank"><i class="fab fa-google" style="font-size:10px"></i> Google Maps</a></span>')
+      +'</div></div></div>';
   }).join('');
-  html+='<div class="src-note"><i class="fas fa-search" style="color:var(--accent)"></i> Vir: <a href="https://en.wikivoyage.org/wiki/'+encodeURIComponent(article)+'" target="_blank">Wikivoyage — '+he(article)+'</a></div>';
+  // City-specific TripAdvisor link
+  var taUrl=type==='rest'
+    ?'https://www.tripadvisor.com/Search?q='+encodeURIComponent(city+' restaurants')+'&searchFirst=true'
+    :'https://www.tripadvisor.com/Search?q='+encodeURIComponent(city+' attractions')+'&searchFirst=true';
+  html+='<div class="src-note">'
+    +'<i class="fas fa-search" style="color:var(--accent)"></i> Vir: <a href="https://en.wikivoyage.org/wiki/'+encodeURIComponent(article)+'" target="_blank">Wikivoyage</a>'
+    +' &nbsp;·&nbsp; <a href="'+taUrl+'" target="_blank" style="color:var(--secondary)"><i class="fas fa-star"></i> TripAdvisor — '+he(city)+'</a>'
+    +'</div>';
   el.innerHTML=html;
-}
-
-// ── NEIGHBORHOODS ─────────────────────────────────
-function renderDistricts(districts, city, article){
-  var sec=$$('nbhdSec'), grid=$$('nbhdGrid');
-  if(!districts||!districts.length){sec.style.display='none';return;}
-  sec.style.display='block';
-  $$('nbhdSrc').textContent='Must-see četrti & področja · Wikivoyage / '+article;
-  grid.innerHTML=districts.map(function(d){
-    var ev=districtEmoji(d.name||'',d.desc||'');
-    var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((d.name||'')+' '+city+' neighborhood');
-    return'<a href="'+gm+'" target="_blank" class="nbhd-card">'
-      +'<div class="nbhd-emoji">'+ev.e+'</div>'
-      +'<div class="nbhd-name">'+he(d.name||'')+'</div>'
-      +'<div class="nbhd-vibe">'+ev.v+'</div>'
-      +'<div class="nbhd-desc">'+he((d.desc||'').slice(0,160))+((d.desc||'').length>160?'…':'')+'</div>'
-      +'<div class="nbhd-gm"><i class="fab fa-google"></i> Poglej na Maps</div>'
-      +'</a>';
-  }).join('');
 }
 
 function fbLinks(type,city){
   var ce=encodeURIComponent(city);
-  if(type==='rest')return'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Poišči restavracije na:</p><div class="fbl"><a href="https://www.tripadvisor.com/Restaurants-g-'+ce+'.html" target="_blank"><i class="fas fa-star"></i> TripAdvisor</a><a href="https://www.google.com/maps/search/restaurants+in+'+ce+'" target="_blank"><i class="fab fa-google"></i> Google Maps</a><a href="https://www.thefork.com/search#cityName='+ce+'" target="_blank"><i class="fas fa-concierge-bell"></i> TheFork</a></div>';
-  return'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Poišči znamenitosti na:</p><div class="fbl"><a href="https://www.tripadvisor.com/Attractions-g-'+ce+'.html" target="_blank"><i class="fas fa-star"></i> TripAdvisor</a><a href="https://www.google.com/maps/search/attractions+in+'+ce+'" target="_blank"><i class="fab fa-google"></i> Google Maps</a><a href="https://en.wikivoyage.org/wiki/'+ce+'" target="_blank"><i class="fas fa-book-open"></i> Wikivoyage</a></div>';
+  var taUrl=type==='rest'
+    ?'https://www.tripadvisor.com/Search?q='+encodeURIComponent(city+' restaurants')+'&searchFirst=true'
+    :'https://www.tripadvisor.com/Search?q='+encodeURIComponent(city+' attractions')+'&searchFirst=true';
+  var gmUrl=type==='rest'
+    ?'https://www.google.com/maps/search/restaurants+in+'+ce
+    :'https://www.google.com/maps/search/attractions+in+'+ce;
+  var label=type==='rest'?'restavracije':'znamenitosti';
+  return'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Poišči '+label+' v '+he(city)+' na:</p>'
+    +'<div class="fbl">'
+    +'<a href="'+taUrl+'" target="_blank"><i class="fas fa-star"></i> TripAdvisor — '+he(city)+'</a>'
+    +'<a href="'+gmUrl+'" target="_blank"><i class="fab fa-google"></i> Google Maps</a>'
+    +(type==='rest'?'<a href="https://www.thefork.com/search#cityName='+ce+'" target="_blank"><i class="fas fa-concierge-bell"></i> TheFork</a>':'')
+    +'</div>';
 }
 
 // ── FLIGHTS ───────────────────────────────────────
 var IATA={'paris':'PAR','london':'LON','rome':'ROM','barcelona':'BCN','amsterdam':'AMS','berlin':'BER','madrid':'MAD','lisbon':'LIS','prague':'PRG','vienna':'VIE','budapest':'BUD','warsaw':'WAW','athens':'ATH','istanbul':'IST','dubai':'DXB','dubrovnik':'DBV','split':'SPU','zadar':'ZAD','zagreb':'ZAG','venice':'VCE','milan':'MIL','florence':'FLR','naples':'NAP','bologna':'BLQ','pisa':'PSA','verona':'VRN','bari':'BRI','palermo':'PMO','catania':'CTA','nice':'NCE','marseille':'MRS','lyon':'LYS','munich':'MUC','frankfurt':'FRA','hamburg':'HAM','dusseldorf':'DUS','zurich':'ZRH','geneva':'GVA','brussels':'BRU','copenhagen':'CPH','stockholm':'STO','oslo':'OSL','helsinki':'HEL','porto':'OPO','seville':'SVQ','valencia':'VLC','malaga':'AGP','palma':'PMI','ibiza':'IBZ','tenerife':'TFS','gran canaria':'LPA','mykonos':'JMK','santorini':'JTR','rhodes':'RHO','heraklion':'HER','corfu':'CFU','thessaloniki':'SKG','antalya':'AYT','bodrum':'BJV','izmir':'ADB','marrakech':'RAK','casablanca':'CMN','cairo':'CAI','tel aviv':'TLV','new york':'NYC','los angeles':'LAX','miami':'MIA','cancun':'CUN','bangkok':'BKK','bali':'DPS','singapore':'SIN','hong kong':'HKG','tokyo':'TYO','seoul':'SEL','kuala lumpur':'KUL','sydney':'SYD','melbourne':'MEL','riga':'RIX','tallinn':'TLL','vilnius':'VNO','bratislava':'BTS','ljubljana':'LJU','sarajevo':'SJJ','belgrade':'BEG','sofia':'SOF','bucharest':'BUH','tirana':'TIA','skopje':'SKP','reykjavik':'REK','valletta':'MLA'};
 function getIATA(n){n=n.toLowerCase().trim();if(IATA[n])return IATA[n];var ks=Object.keys(IATA);for(var i=0;i<ks.length;i++){if(n.indexOf(ks[i])!==-1||ks[i].indexOf(n)!==-1)return IATA[ks[i]];}return null;}
+// Pretvori ime mesta v Skyscanner URL slug (brez diakritike, male črke, - namesto presledkov)
+function skySlug(name){
+  return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,'').trim().replace(/\s+/g,'-');
+}
 function buildFlights(destCity,d1,d2){
-  var dest=getIATA(destCity),out=skyD(d1),ret=skyD(d2);
-  var origins=[{code:'LJU',city:'Ljubljana',flag:'si',emoji:'🇸🇮'},{code:'ZAG',city:'Zagreb',flag:'hr',emoji:'🇭🇷'},{code:'VCE',city:'Benetke',flag:'it',emoji:'🇮🇹'},{code:'BUD',city:'Budimpešta',flag:'hu',emoji:'🇭🇺'},{code:'VIE',city:'Dunaj',flag:'at',emoji:'🇦🇹'}];
+  var dest=getIATA(destCity),out=skyD(d1),ret=skyD(d2),slug=skySlug(destCity);
+  var origins=[{code:'LJU',slug:'ljubljana',city:'Ljubljana',flag:'si',emoji:'🇸🇮'},{code:'ZAG',slug:'zagreb',city:'Zagreb',flag:'hr',emoji:'🇭🇷'},{code:'VCE',slug:'venice',city:'Benetke',flag:'it',emoji:'🇮🇹'},{code:'BUD',slug:'budapest',city:'Budimpešta',flag:'hu',emoji:'🇭🇺'},{code:'VIE',slug:'vienna',city:'Dunaj',flag:'at',emoji:'🇦🇹'}];
   $$('fGrid').innerHTML=origins.map(function(o){
-    var url=dest?'https://www.skyscanner.net/transport/flights/'+o.code+'/'+dest+'/'+out+'/'+ret+'/?adults=2&cabinclass=economy':'https://www.google.com/travel/flights?q=Flights+from+'+o.city+'+to+'+encodeURIComponent(destCity);
+    // Če poznamo IATA kodo: direktni URL; sicer Skyscanner iskanje po imenu mesta
+    var url=dest
+      ?'https://www.skyscanner.net/transport/flights/'+o.code+'/'+dest+'/'+out+'/'+ret+'/?adults=2&cabinclass=economy'
+      :'https://www.skyscanner.net/flights/'+o.slug+'/'+slug+'/'+out+'/'+ret+'/?adults=2';
     return'<a href="'+url+'" target="_blank" class="fcard"><div class="fcs"><div class="fcity">'+o.emoji+' '+o.city+'</div><div class="fcode">'+o.code+'</div><div class="fdate"><i class="fas fa-plane-departure" style="color:var(--accent);font-size:10px"></i> '+fmtDate(d1)+'</div></div><div class="farr"><i class="fas fa-arrow-right"></i></div><div class="fcs"><div class="fcity">🌍 '+he(destCity)+'</div><div class="fcode">'+(dest||'—')+'</div><div class="fdate"><i class="fas fa-plane-arrival" style="color:var(--accent);font-size:10px"></i> '+fmtDate(d2)+'</div></div><i class="fas fa-external-link-alt fext"></i></a>';
   }).join('');
   $$('flightsSec').style.display='block';
@@ -804,10 +795,11 @@ function buildFlightPrices(){
     var ap=AIRPORTS[code];
     var km=Math.round(haversine(ap.lat,ap.lon,trip.lat,trip.lon));
     var pr=flightPriceRange(km,trip.d1);
-    var dest=getIATA(trip.city)||'anywhere';
-    var skyUrl=dest!=='anywhere'
+    var dest=getIATA(trip.city),slug=skySlug(trip.city);
+    var originSlugs={LJU:'ljubljana',ZAG:'zagreb',VCE:'venice',BUD:'budapest',VIE:'vienna'};
+    var skyUrl=dest
       ?'https://www.skyscanner.net/transport/flights/'+code+'/'+dest+'/'+skyD(trip.d1)+'/'+skyD(trip.d2)+'/?adults=2&cabinclass=economy'
-      :'https://www.google.com/travel/flights?q=Flights+from+'+ap.city+'+to+'+encodeURIComponent(trip.city);
+      :'https://www.skyscanner.net/flights/'+(originSlugs[code]||code.toLowerCase())+'/'+slug+'/'+skyD(trip.d1)+'/'+skyD(trip.d2)+'/?adults=2';
     html+='<div class="fp-card" id="fpc'+idx+'" onclick="selectFlight('+idx+','+pr.min+','+pr.max+')">'
       +'<div class="fp-flag">'+ap.flag+'</div>'
       +'<div class="fp-info"><div class="fp-route">'+ap.city+' ('+code+') → '+he(trip.city)+'</div>'
@@ -1010,7 +1002,6 @@ function go(){
   $$('results').style.display='none';
   $$('flightsSec').style.display='none';
   $$('costSec').style.display='none';
-  $$('nbhdSec').style.display='none';
   selFlight=-1;selFlightCost=0;carTotal=0;
 
   geocode(city).then(function(geo){
@@ -1029,7 +1020,6 @@ function go(){
     $$('wGrid').innerHTML='<div class="ml"><div class="msp"></div>Nalagam napoved za termin…</div>';
     $$('restList').innerHTML='<div class="ml"><div class="msp"></div>Iščem restavracije…</div>';
     $$('sightList').innerHTML='<div class="ml"><div class="msp"></div>Iščem znamenitosti…</div>';
-    $$('nbhdGrid').innerHTML='<div class="ml"><div class="msp"></div>Iščem zanimive četrti…</div>';
 
     buildAccom(name,d1,d2);
     if(transport==='plane')buildFlights(name,d1,d2);
@@ -1040,12 +1030,10 @@ function go(){
       .then(function(data){
         renderPlaces(data.restaurants,'restList','rest',name,data.article);
         renderPlaces(data.sights,'sightList','sight',name,data.article);
-        renderDistricts(data.districts,name,data.article);
       })
       .catch(function(){
         $$('restList').innerHTML=fbLinks('rest',name);
         $$('sightList').innerHTML=fbLinks('sight',name);
-        $$('nbhdSec').style.display='none';
       });
   }).catch(function(e){setLoader(false);showErr('<strong>Napaka</strong><br>'+(e.message||'Preveri internetno povezavo.'));});
 }
