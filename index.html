@@ -216,22 +216,28 @@
     .ml{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;padding:20px 0}
     .msp{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
 
-    .wl-sec{background:var(--surface);border:1px solid var(--border);border-radius:24px;overflow:hidden;margin-top:16px}
+    .wl-sec{background:linear-gradient(160deg,rgba(255,101,132,.13) 0%,rgba(255,101,132,.08) 40%,rgba(108,99,255,.09) 100%);border:1px solid rgba(255,101,132,.25);border-radius:24px;overflow:hidden;margin-top:16px;box-shadow:0 6px 32px rgba(255,101,132,.08)}
     .wl-head{padding:22px 28px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .2s}
-    .wl-head:hover{background:var(--surface2)}
+    .wl-head:hover{background:rgba(255,101,132,.07)}
     .wl-hl{display:flex;align-items:center;gap:14px}
     .wl-ico{width:44px;height:44px;background:linear-gradient(135deg,var(--secondary),#ff8fa3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
     .wl-head h2{font-size:20px;font-weight:700}
     .wl-head p{font-size:13px;color:var(--text-muted);margin-top:2px}
-    .wl-chev{width:36px;height:36px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform .3s}
+    .wl-chev{width:36px;height:36px;background:rgba(255,101,132,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--secondary);transition:transform .3s}
     .wl-chev.open{transform:rotate(180deg)}
     .wl-body{padding:0 28px 28px;display:none}
     .wl-body.open{display:block}
     .wl-empty{text-align:center;padding:40px 20px;color:var(--text-muted)}
     .wl-empty i{font-size:40px;margin-bottom:12px;display:block;opacity:.4}
+    .wl-continent{margin-bottom:28px}
+    .wl-continent:last-child{margin-bottom:0}
+    .wl-cont-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,101,132,.2)}
+    .wl-cont-emoji{font-size:22px;line-height:1}
+    .wl-cont-label{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text)}
+    .wl-cont-count{margin-left:auto;font-size:12px;color:var(--text-muted);background:rgba(255,101,132,.12);border-radius:10px;padding:3px 10px}
     .wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-    .wc{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:18px;transition:all .2s}
-    .wc:hover{border-color:var(--primary);transform:translateY(-2px)}
+    .wc{background:rgba(15,14,23,.45);border:1px solid rgba(255,101,132,.18);border-radius:16px;padding:18px;transition:all .2s;backdrop-filter:blur(6px)}
+    .wc:hover{border-color:rgba(255,101,132,.45);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,101,132,.1)}
     .wc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
     .wc-city{font-size:17px;font-weight:700;font-family:'Playfair Display',serif;display:flex;align-items:center;gap:7px}
     .wc-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
@@ -242,6 +248,10 @@
     .wc-del:hover{background:rgba(255,101,132,.2);transform:scale(1.1)}
     .wc-load{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--primary-light);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;margin-top:10px}
     .wc-load:hover{background:rgba(108,99,255,.2)}
+    .wc-cost{background:rgba(67,198,172,.07);border:1px solid rgba(67,198,172,.2);border-radius:10px;padding:9px 12px;margin-top:10px}
+    .wc-cost-total{font-size:14px;font-weight:700;color:var(--accent)}
+    .wc-cost-pp{font-size:12px;color:var(--text-muted);font-weight:400}
+    .wc-cost-parts{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6}
 
     .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;box-shadow:var(--shadow);z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
     .toast.show{transform:translateY(0);opacity:1}
@@ -254,6 +264,115 @@
     .ic-f{background:rgba(67,198,172,.12)}  .ic-f i{color:var(--accent)}
     .ic-cost{background:linear-gradient(135deg,rgba(108,99,255,.2),rgba(67,198,172,.1))} .ic-cost i{color:var(--primary-light)}
     hr.div{border:none;border-top:1px solid var(--border);margin:28px 0}
+
+    /* ══════════════════════════════
+       NAŠA POTOVANJA
+    ══════════════════════════════ */
+    .vis-sec{background:linear-gradient(160deg,rgba(67,198,172,.1) 0%,rgba(67,198,172,.06) 50%,rgba(108,99,255,.07) 100%);border:1px solid rgba(67,198,172,.22);border-radius:24px;overflow:hidden;margin-top:20px;box-shadow:0 6px 32px rgba(67,198,172,.07)}
+    .vis-head{padding:22px 28px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .2s;flex-wrap:wrap;gap:12px}
+    .vis-head:hover{background:rgba(67,198,172,.06)}
+    .vis-head-l{display:flex;align-items:center;gap:14px}
+    .vis-ico{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#5bd8c3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+    .vis-head h2{font-size:20px;font-weight:700}
+    .vis-head p{font-size:13px;color:var(--text-muted);margin-top:2px}
+    .vis-head-btns{display:flex;gap:10px;align-items:center}
+    .btn-vis-add{background:linear-gradient(135deg,var(--accent),#5bd8c3);border:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--bg);cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all .2s;box-shadow:0 3px 12px rgba(67,198,172,.3)}
+    .btn-vis-add:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(67,198,172,.4)}
+    .vis-chev{width:36px;height:36px;background:rgba(67,198,172,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);transition:transform .3s}
+    .vis-chev.open{transform:rotate(180deg)}
+    .vis-body{display:none;padding:0 28px 28px}
+    .vis-body.open{display:block}
+    @media(max-width:768px){.vis-head{padding:16px 18px} .vis-body{padding:0 14px 20px}}
+
+    /* Stats strip */
+    .vis-stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+    @media(max-width:600px){.vis-stats-strip{grid-template-columns:1fr 1fr}}
+    .vss{background:rgba(0,0,0,.25);border:1px solid rgba(67,198,172,.15);border-radius:14px;padding:14px 16px;text-align:center}
+    .vss-val{font-size:26px;font-weight:800;color:var(--accent)}
+    .vss-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px}
+
+    /* European comparison */
+    .vis-compare{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:14px;padding:18px 20px;margin-bottom:20px}
+    .vc-title{font-size:13px;font-weight:700;color:var(--primary-light);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+    .vc-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+    .vc-name{font-size:12px;color:var(--text-muted);width:130px;flex-shrink:0}
+    .vc-bar-wrap{flex:1;background:rgba(255,255,255,.07);border-radius:6px;height:10px;min-width:80px}
+    .vc-bar{height:10px;border-radius:6px;transition:width .8s ease}
+    .vc-num{font-size:13px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
+    .vc-you{color:var(--accent)}
+    .vc-note{font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6}
+    .vc-note a{color:var(--primary-light);text-decoration:none}
+
+    /* Visited map */
+    #visMapEl{height:320px;width:100%;border-radius:14px;overflow:hidden;margin-bottom:20px}
+    @media(max-width:768px){#visMapEl{height:220px}}
+
+    /* Visited list */
+    .vis-empty{text-align:center;padding:32px 20px;color:var(--text-muted)}
+    .vis-empty i{font-size:36px;margin-bottom:10px;display:block;opacity:.3;color:var(--accent)}
+    .vc-card{background:rgba(0,0,0,.2);border:1px solid rgba(67,198,172,.15);border-radius:14px;padding:16px 18px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px;transition:all .2s}
+    .vc-card:hover{border-color:rgba(67,198,172,.35);background:rgba(0,0,0,.3)}
+    .vc-check{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),#5bd8c3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px}
+    .vc-info{flex:1;min-width:0}
+    .vc-city-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+    .vc-city-name{font-weight:700;font-size:15px;font-family:'Playfair Display',serif}
+    .vc-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .vc-tag{background:rgba(67,198,172,.1);border-radius:8px;padding:3px 10px;font-size:12px;color:var(--accent)}
+    .vc-tag.spent{background:rgba(251,191,36,.1);color:#fbbf24}
+    .vc-notes{font-size:12px;color:var(--text-muted);margin-top:5px;font-style:italic}
+    .vc-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+    .btn-vc-del{background:rgba(255,101,132,.1);border:none;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--secondary);cursor:pointer;font-size:12px;transition:all .2s}
+    .btn-vc-del:hover{background:rgba(255,101,132,.2);transform:scale(1.1)}
+
+    /* Add form */
+    .vis-add-form{background:rgba(0,0,0,.2);border:1px solid rgba(67,198,172,.2);border-radius:16px;padding:20px;margin-bottom:16px}
+    .vis-form-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+    .vis-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.vis-form-grid{grid-template-columns:1fr}}
+    .vis-field{display:flex;flex-direction:column;gap:6px}
+    .vis-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted)}
+    .vis-field input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;width:100%;transition:all .2s}
+    .vis-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(67,198,172,.15)}
+    .vis-field input[type="date"]{-webkit-appearance:none;appearance:none}
+    .vis-form-btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .btn-vis-save{background:linear-gradient(135deg,var(--accent),#5bd8c3);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:700;color:var(--bg);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+    .btn-vis-save:hover{transform:translateY(-1px)}
+    .btn-vis-cancel{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+    .btn-vis-cancel:hover{border-color:var(--secondary);color:var(--secondary)}
+    .vis-ac-wrap{position:relative}
+    .vis-ac-drop{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;z-index:300;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);display:none}
+    .vis-ac-drop.show{display:block}
+
+    /* Wishlist "mark visited" button */
+    .btn-wc-vis{background:rgba(67,198,172,.1);border:1px solid rgba(67,198,172,.2);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--accent);cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;margin-top:6px}
+    .btn-wc-vis:hover{background:rgba(67,198,172,.2)}
+
+    /* ── VARČEVALNI KALKULATOR ── */
+    .ic-save{background:rgba(251,191,36,.25)} .ic-save i{color:#f59e0b}
+    .save-total-row{display:flex;align-items:center;justify-content:space-between;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:14px 18px;margin-bottom:20px}
+    .save-total-label{font-size:13px;color:var(--text-muted)}
+    .save-total-val{font-size:20px;font-weight:800;color:var(--primary-light)}
+    .save-total-val.empty{color:var(--text-muted);font-size:14px;font-weight:400;font-style:italic}
+    .save-input-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .save-input-row label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);white-space:nowrap}
+    .save-iw{display:flex;align-items:center;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:10px;overflow:hidden;transition:all .2s;max-width:220px;flex:1}
+    .save-iw:focus-within{border-color:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,.15)}
+    .save-eur{padding:12px 14px;font-size:17px;font-weight:700;color:#fbbf24;background:rgba(251,191,36,.08);border-right:1px solid var(--border)}
+    .save-iw input{flex:1;background:transparent;border:none;outline:none;padding:12px 14px;color:var(--text);font-size:17px;font-weight:700;font-family:'Inter',sans-serif}
+    .save-iw input::placeholder{color:var(--text-muted);font-size:14px;font-weight:400}
+    .save-per{font-size:12px;color:var(--text-muted);white-space:nowrap}
+    .save-result{margin-top:20px;background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.04));border:1px solid rgba(251,191,36,.2);border-radius:14px;padding:20px 22px;display:none}
+    .save-result.show{display:block}
+    .save-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+    @media(max-width:500px){.save-stats{grid-template-columns:1fr}}
+    .save-stat{background:rgba(0,0,0,.2);border-radius:10px;padding:12px 14px}
+    .save-stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+    .save-stat-val{font-size:20px;font-weight:800;color:#fbbf24}
+    .save-stat-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+    .save-msg{font-size:15px;line-height:1.7;color:var(--text);padding-top:14px;border-top:1px solid rgba(251,191,36,.15)}
+    .save-msg strong{color:#fbbf24}
+    .save-hint{font-size:12px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:6px}
+    .save-hint i{color:var(--accent)}
 
     /* ── ZEMLJEVID ── */
     .ic-map{background:rgba(67,198,172,.15)} .ic-map i{color:var(--accent)}
@@ -498,6 +617,29 @@
       <div class="sc-body"><div class="fg" id="fGrid"></div></div>
     </div>
 
+    <!-- VARČEVALNI KALKULATOR -->
+    <div class="sc" id="saveSec" style="display:none;margin-top:24px;background:linear-gradient(135deg,rgba(251,191,36,.12) 0%,rgba(245,158,11,.08) 60%,rgba(251,191,36,.06) 100%);border-color:rgba(251,191,36,.3)">
+      <div class="sc-head">
+        <div class="sc-icon ic-save"><i class="fas fa-piggy-bank"></i></div>
+        <div class="sc-ht"><h3>Kalkulator varčevanja</h3><p>Kdaj si boš to potovanje lahko privoščil/-a?</p></div>
+      </div>
+      <div class="sc-body">
+        <div class="save-total-row">
+          <span class="save-total-label">💰 Skupni strošek potovanja</span>
+          <span class="save-total-val empty" id="saveTotalVal">Najprej izpolni stroškovnik ↑</span>
+        </div>
+        <div class="save-input-row">
+          <label><i class="fas fa-calendar-check" style="margin-right:5px;color:#fbbf24"></i>Mesečno varčevanje</label>
+          <div class="save-iw">
+            <div class="save-eur">€</div>
+            <input type="number" id="saveMonthly" placeholder="npr. 200" min="1" oninput="calcSavings()">
+          </div>
+          <span class="save-per">na mesec</span>
+        </div>
+        <div class="save-result" id="saveResult"></div>
+      </div>
+    </div>
+
   </div>
 
   <hr class="div">
@@ -509,6 +651,65 @@
     </div>
     <div class="wl-body" id="wlBody"><div id="wlContent"></div></div>
   </div>
+  <!-- NAŠA POTOVANJA -->
+  <div class="vis-sec">
+    <div class="vis-head" onclick="visPanel()">
+      <div class="vis-head-l">
+        <div class="vis-ico">✅</div>
+        <div><h2>Naša Potovanja</h2><p id="visCount">Obiskanih destinacij: 0</p></div>
+      </div>
+      <div class="vis-head-btns">
+        <button class="btn-vis-add" onclick="event.stopPropagation();visToggleForm()">
+          <i class="fas fa-plus"></i> Dodaj potovanje
+        </button>
+        <div class="vis-chev" id="visChev"><i class="fas fa-chevron-down"></i></div>
+      </div>
+    </div>
+    <div class="vis-body" id="visBody">
+
+      <!-- Add form (hidden initially) -->
+      <div class="vis-add-form" id="visAddForm" style="display:none">
+        <div class="vis-form-title"><i class="fas fa-plus-circle"></i> Dodaj obiskano potovanje</div>
+        <div class="vis-form-grid">
+          <div class="vis-field vis-ac-wrap" id="visAcWrap">
+            <label>Destinacija</label>
+            <input type="text" id="visCityIn" placeholder="npr. Rim, Pariz…" autocomplete="off">
+            <div class="vis-ac-drop" id="visAcDrop"></div>
+          </div>
+          <div class="vis-field">
+            <label>Porabljeno (€)</label>
+            <input type="number" id="visSpent" placeholder="npr. 850" min="0">
+          </div>
+          <div class="vis-field">
+            <label>Datum odhoda</label>
+            <input type="date" id="visD1">
+          </div>
+          <div class="vis-field">
+            <label>Datum prihoda domov</label>
+            <input type="date" id="visD2">
+          </div>
+        </div>
+        <div class="vis-form-btns">
+          <button class="btn-vis-save" onclick="saveVisitedTrip()"><i class="fas fa-check"></i> Shrani</button>
+          <button class="btn-vis-cancel" onclick="visToggleForm()">Prekliči</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="vis-stats-strip" id="visStatsStrip"></div>
+
+      <!-- European comparison -->
+      <div class="vis-compare" id="visCompare" style="display:none"></div>
+
+      <!-- Map -->
+      <div id="visMapEl"></div>
+
+      <!-- List -->
+      <div id="visitedContent"></div>
+
+    </div>
+  </div>
+
   <div style="height:60px"></div>
 </div>
 
@@ -521,6 +722,8 @@
 var trip=null, transport='car', ovLinks=[], wl=[];
 var selFlight=-1, selFlightCost=0, carTotal=0;
 var fuelL=7.0, fuelPrice=1.65;
+var pendingCostRestore=null;
+var totalCostGlobal=0; // skupni strošek za varčevalni kalkulator // stroški za obnovo ko naložimo iz wish lista
 try{wl=JSON.parse(localStorage.getItem('njp_wl')||'[]');}catch(_){}
 
 // ── HELPERS ───────────────────────────────────────
@@ -816,6 +1019,33 @@ function buildCostSection(){
     +'</div>'
     +'<div class="cost-total" id="costTotal"><div style="font-size:13px;color:var(--text-muted);text-align:center;padding:8px 0">Vnesi cene nastanitve in dnevni budget za izračun skupnih stroškov.</div></div>';
   $$('costBody').innerHTML=html;
+
+  // Obnovi stroške iz wish lista (če obstajajo)
+  if(pendingCostRestore){
+    var _c=pendingCostRestore; pendingCostRestore=null;
+    var _ap2=$$('accomPrice'),_dp2=$$('dayBudget');
+    if(_ap2&&_c.accomPN) _ap2.value=_c.accomPN;
+    if(_dp2&&_c.dayPP)   _dp2.value=_c.dayPP;
+    if(transport==='car'&&_c.carTot>0){
+      carTotal=_c.carTot;
+    }
+    if(transport==='plane'&&_c.sFlIdx>=0&&_c.sFlCost>0){
+      // Počakamo da se flight kartice naložijo (buildFlightPrices se kliče pozneje)
+      setTimeout(function(){
+        selFlight=_c.sFlIdx; selFlightCost=_c.sFlCost;
+        var codes=Object.keys(AIRPORTS);
+        codes.forEach(function(_,i){
+          var card=$$('fpc'+i),chk=$$('fpchk'+i);
+          if(!card)return;
+          if(i===_c.sFlIdx){card.classList.add('selected');if(chk)chk.innerHTML='<i class="fas fa-check"></i>';}
+          else{card.classList.remove('selected');if(chk)chk.innerHTML='';}
+        });
+        recalcTotal();
+      },350);
+    }
+    recalcTotal();
+  }
+
   if(transport==='car')setTimeout(calcCarRoute,300);
 }
 
@@ -923,6 +1153,15 @@ function recalcTotal(){
   if(dayEl&&dayEl.value){dayCost=parseFloat(dayEl.value)*n*2;dayLabel=fmtEur(dayCost);}
   var dayCalcEl=$$('dayCalc');if(dayCalcEl)dayCalcEl.textContent=dayCost?fmtEur(dayCost)+' (2 osebi × '+n+' dni)':'';
   var grand=transportCost+accomCost+dayCost,pp=grand/2;
+  // Posodobi globalno spremenljivko in varčevalni kalkulator
+  totalCostGlobal=grand;
+  var stv=$$('saveTotalVal');
+  if(stv){
+    if(grand>0){stv.textContent=fmtEur(grand);stv.className='save-total-val';}
+    else{stv.textContent='Najprej izpolni stroškovnik ↑';stv.className='save-total-val empty';}
+    if($$('saveSec'))$$('saveSec').style.display='block';
+    calcSavings();
+  }
   totalEl.innerHTML='<div class="ct-title"><i class="fas fa-calculator"></i> Skupni stroškovnik</div>'
     +'<div class="ct-rows"><div class="ct-row"><div class="cr-l">'+(transport==='plane'?'✈️ Letalske karte (2 osebi)':'🚗 Avto (gorivo + cestnine + park.)')+'</div><div class="cr-v">'+transportLabel+'</div></div>'
     +(transportNote?'<div class="ct-row"><div class="cr-l" style="font-size:11px;padding-left:20px">'+transportNote+'</div></div>':'')
@@ -1051,6 +1290,49 @@ document.addEventListener('click',function(e){
   var w=$$('acWrap');if(w&&!w.contains(e.target))acHide();
 });
 
+// ── VARČEVALNI KALKULATOR ─────────────────────────
+var SL_MONTHS_LOC=['januarju','februarju','marcu','aprilu','maju','juniju','juliju','avgustu','septembru','oktobru','novembru','decembru'];
+var SL_MONTHS=['januar','februar','marec','april','maj','junij','julij','avgust','september','oktober','november','december'];
+
+function calcSavings(){
+  var res=$$('saveResult');
+  if(!res) return;
+  var monthly=parseFloat(($$('saveMonthly')||{}).value)||0;
+  var total=totalCostGlobal;
+  if(!monthly||monthly<=0||!total||total<=0){
+    res.classList.remove('show');
+    return;
+  }
+  var months=Math.ceil(total/monthly);
+  // Cilj: začnemo šparati naslednji mesec
+  var today=new Date();
+  var target=new Date(today.getFullYear(), today.getMonth()+1+months, 1);
+  var monthLoc=SL_MONTHS_LOC[target.getMonth()];
+  var monthName=SL_MONTHS[target.getMonth()].toUpperCase();
+  var year=target.getFullYear();
+  // Trajanje v čitljivi obliki
+  var years=Math.floor(months/12), rem=months%12;
+  var dur='';
+  if(years>0) dur+=years+(years===1?' leto':years<5?' leti':' let')+' ';
+  if(rem>0)   dur+=rem+(rem===1?' mesec':rem<5?' mesece':' mesecev');
+  dur=dur.trim()||months+' mesecev';
+  // Koliko bi imeli prišparanega vsak mesec
+  var savedByMonth=[];
+  for(var m=1;m<=Math.min(months,6);m++){
+    savedByMonth.push(fmtEur(m*monthly));
+  }
+  res.innerHTML=
+    '<div class="save-stats">'
+    +'<div class="save-stat"><div class="save-stat-label">📅 Potrebnih mesecev</div><div class="save-stat-val">'+months+'</div><div class="save-stat-sub">'+dur+'</div></div>'
+    +'<div class="save-stat"><div class="save-stat-label">🎯 Datum cilja</div><div class="save-stat-val">'+monthName+'</div><div class="save-stat-sub">'+year+'</div></div>'
+    +'</div>'
+    +'<div class="save-msg">'
+    +'💌 Če začneš šparati naslednji mesec, si boš potovanje privoščil/-a v <strong>'+monthLoc+' '+year+'</strong>.'
+    +'</div>'
+    +'<div class="save-hint"><i class="fas fa-info-circle"></i> Pri mesečnem varčevanju '+fmtEur(monthly)+' boš v '+months+' mesecih skupaj prišparal/-a '+fmtEur(months*monthly)+'.</div>';
+  res.classList.add('show');
+}
+
 // ── ZEMLJEVID ─────────────────────────────────────
 var leafMap = null;
 
@@ -1171,7 +1453,10 @@ function go(){
 
 // ── HOME ──────────────────────────────────────────
 function goHome(){
-  trip=null;selFlight=-1;selFlightCost=0;carTotal=0;
+  trip=null;selFlight=-1;selFlightCost=0;carTotal=0;totalCostGlobal=0;
+  if($$('saveSec'))$$('saveSec').style.display='none';
+  if($$('saveMonthly'))$$('saveMonthly').value='';
+  if($$('saveResult'))$$('saveResult').classList.remove('show');
   $$('cityIn').value='';
   var today=new Date(),d1=new Date(today),d2;
   d1.setMonth(today.getMonth()+1);d2=new Date(d1);d2.setDate(d1.getDate()+5);
@@ -1192,21 +1477,378 @@ function wlUpdateBtn(){var b=$$('wlBtn');if(inWl()){b.className='btn-wl saved';b
 function wlToggle(){
   if(!trip)return;
   if(inWl()){wl=wl.filter(function(t){return!(t.city===trip.city&&t.d1===trip.d1&&t.d2===trip.d2);});toast('Odstranjeno','info');}
-  else{wl.unshift(Object.assign({},trip,{addedAt:new Date().toISOString()}));toast(trip.city+' dodano! 💝','ok');if(!$$('wlBody').classList.contains('open'))wlPanel();}
+  else{
+    // Shrani tudi trenutne vnose stroškovnika
+    var _ap=$$('accomPrice'),_dp=$$('dayBudget');
+    var costs={
+      accomPN: _ap&&_ap.value ? parseFloat(_ap.value)||0 : 0,
+      dayPP:   _dp&&_dp.value ? parseFloat(_dp.value)||0 : 0,
+      sFlIdx:  selFlight,
+      sFlCost: selFlightCost,
+      carTot:  carTotal
+    };
+    wl.unshift(Object.assign({},trip,{addedAt:new Date().toISOString(),costs:costs}));
+    toast(trip.city+' dodano! 💝','ok');
+    if(!$$('wlBody').classList.contains('open'))wlPanel();
+  }
   try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}
   wlUpdateBtn();renderWl();
 }
 function wlDel(i){wl.splice(i,1);try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}renderWl();wlUpdateBtn();toast('Odstranjeno','info');}
-function wlLoad(i){var t=wl[i];$$('cityIn').value=t.city;$$('d1').value=t.d1;$$('d2').value=t.d2;if(t.transport){transport=t.transport;var tr=$$('tTog');tr.classList.toggle('car',transport==='car');tr.classList.toggle('plane',transport==='plane');}window.scrollTo({top:0,behavior:'smooth'});setTimeout(go,400);}
+function wlLoad(i){
+  var t=wl[i];
+  $$('cityIn').value=t.city;
+  $$('d1').value=t.d1;
+  $$('d2').value=t.d2;
+  if(t.transport){
+    transport=t.transport;
+    var tr=$$('tTog');
+    tr.classList.toggle('car',transport==='car');
+    tr.classList.toggle('plane',transport==='plane');
+  }
+  // Nastavi stroške za obnovo po iskanju
+  if(t.costs) pendingCostRestore=t.costs;
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(go,400);
+}
 function wlPanel(){$$('wlBody').classList.toggle('open');$$('wlChev').classList.toggle('open');if($$('wlBody').classList.contains('open'))renderWl();}
+// ── CELINSKO RAZVRŠČANJE ──────────────────────────
+var CC_CONT={
+  // Evropa
+  'IT':'EU','FR':'EU','ES':'EU','PT':'EU','DE':'EU','AT':'EU','CH':'EU','NL':'EU','BE':'EU',
+  'GR':'EU','HR':'EU','PL':'EU','CZ':'EU','HU':'EU','SK':'EU','SI':'EU','RS':'EU','ME':'EU',
+  'AL':'EU','MK':'EU','BG':'EU','RO':'EU','TR':'EU','GB':'EU','IE':'EU','DK':'EU','SE':'EU',
+  'NO':'EU','FI':'EU','EE':'EU','LV':'EU','LT':'EU','LU':'EU','MT':'EU','CY':'EU','IS':'EU',
+  'BA':'EU','MD':'EU','BY':'EU','UA':'EU','RU':'EU','LI':'EU','AD':'EU','MC':'EU','SM':'EU','GE':'EU','AM':'EU',
+  // Azija
+  'CN':'AS','JP':'AS','KR':'AS','TH':'AS','ID':'AS','MY':'AS','SG':'AS','VN':'AS','PH':'AS',
+  'IN':'AS','LK':'AS','BD':'AS','MM':'AS','KH':'AS','LA':'AS','BN':'AS','MN':'AS','HK':'AS',
+  'TW':'AS','MO':'AS','PK':'AS','NP':'AS','BT':'AS','AE':'AS','SA':'AS','IL':'AS','JO':'AS',
+  'LB':'AS','QA':'AS','KW':'AS','BH':'AS','OM':'AS','YE':'AS','IQ':'AS','IR':'AS','SY':'AS',
+  'UZ':'AS','KZ':'AS','KG':'AS','TJ':'AS','TM':'AS','AZ':'AS','AF':'AS','MV':'AS',
+  // Amerika
+  'US':'AM','CA':'AM','MX':'AM','BR':'AM','AR':'AM','CL':'AM','CO':'AM','PE':'AM','VE':'AM',
+  'EC':'AM','BO':'AM','UY':'AM','PY':'AM','GY':'AM','SR':'AM','CR':'AM','PA':'AM','GT':'AM',
+  'BZ':'AM','HN':'AM','SV':'AM','NI':'AM','CU':'AM','DO':'AM','JM':'AM','HT':'AM','TT':'AM',
+  'BB':'AM','PR':'AM','BS':'AM','CW':'AM',
+  // Avstralija & Oceanija
+  'AU':'OC','NZ':'OC','FJ':'OC','PG':'OC','PF':'OC','NC':'OC','SB':'OC','VU':'OC','WS':'OC','TO':'OC',
+  // Afrika
+  'MA':'AF','TN':'AF','DZ':'AF','LY':'AF','EG':'AF','SD':'AF','ET':'AF','NG':'AF','GH':'AF',
+  'KE':'AF','TZ':'AF','ZA':'AF','MZ':'AF','UG':'AF','RW':'AF','SN':'AF','CI':'AF','CM':'AF',
+  'MG':'AF','AO':'AF','ZM':'AF','ZW':'AF','NA':'AF','BW':'AF','MU':'AF','SC':'AF'
+};
+var CONT_META={
+  'EU':{label:'Evropa',      emoji:'🏰', order:1},
+  'AS':{label:'Azija',       emoji:'🏯', order:2},
+  'AM':{label:'Amerika',     emoji:'🗽', order:3},
+  'OC':{label:'Avstralija',  emoji:'🦘', order:4},
+  'AF':{label:'Afrika',      emoji:'🌍', order:5},
+  '??':{label:'Ostalo',      emoji:'🌐', order:6}
+};
+function getContinent(cc){ return CC_CONT[(cc||'').toUpperCase()]||'??'; }
+
+function buildWcCard(t,i){
+  var n=nts(t.d1,t.d2);
+  var fl=t.country_code?'<img src="https://flagcdn.com/20x15/'+t.country_code.toLowerCase()+'.png" style="border-radius:2px;vertical-align:middle"> ':'';
+  var tr=t.transport==='plane'?'✈️ Z letalom':'🚗 Z avtom';
+  var grand=0,costParts=[];
+  if(t.costs){
+    var _c=t.costs;
+    if(t.transport==='plane'&&_c.sFlCost>0){grand+=_c.sFlCost*2; costParts.push('✈️ '+fmtEur(_c.sFlCost*2));}
+    if(t.transport==='car'&&_c.carTot>0)   {grand+=_c.carTot;    costParts.push('🚗 '+fmtEur(_c.carTot));}
+    if(_c.accomPN){grand+=_c.accomPN*n; costParts.push('🏨 '+fmtEur(_c.accomPN*n));}
+    if(_c.dayPP)  {grand+=_c.dayPP*n*2; costParts.push('🍽️ '+fmtEur(_c.dayPP*n*2));}
+  }
+  var costRow=grand>0
+    ?'<div class="wc-cost">'
+      +'<div class="wc-cost-total">💰 Skupaj ~'+fmtEur(grand)+'<span class="wc-cost-pp"> · '+fmtEur(grand/2)+'/os</span></div>'
+      +(costParts.length?'<div class="wc-cost-parts">'+costParts.join(' · ')+'</div>':'')
+      +'</div>'
+    :'';
+  return'<div class="wc">'
+    +'<div class="wc-top"><div><div class="wc-city">'+fl+he(t.city)+'</div><div class="wc-sub">'+he(t.country||'')+'</div></div>'
+    +'<button class="wc-del" onclick="wlDel('+i+')"><i class="fas fa-times"></i></button></div>'
+    +'<div class="wc-date"><i class="fas fa-plane-departure"></i>'+fmtDate(t.d1)+'</div>'
+    +'<div class="wc-date"><i class="fas fa-plane-arrival"></i>'+fmtDate(t.d2)+'</div>'
+    +'<div class="wc-meta">🌙 '+n+' noč'+(n===1?'':'i')+' · '+tr+'</div>'
+    +costRow
+    +'<button class="wc-load" onclick="wlLoad('+i+')"><i class="fas fa-search"></i> Naloži & Poišči</button>'
+    +'<button class="btn-wc-vis" onclick="markVisitedFromWl('+i+')"><i class="fas fa-check"></i> Označil sem kot obiskano</button>'
+    +'</div>';
+}
+
 function renderWl(){
   $$('wlCount').textContent='Shranjenih potovanj: '+wl.length;
   var c=$$('wlContent');
-  if(!wl.length){c.innerHTML='<div class="wl-empty"><i class="fas fa-heart-broken"></i><p>Wish list je še prazen.<br>Poišči destinacijo in jo dodaj! ✈️</p></div>';return;}
-  c.innerHTML='<div class="wl-grid">'+wl.map(function(t,i){
-    var n=nts(t.d1,t.d2),fl=t.country_code?'<img src="https://flagcdn.com/20x15/'+t.country_code.toLowerCase()+'.png" style="border-radius:2px;vertical-align:middle"> ':'',tr=t.transport==='plane'?'✈️ Z letalom':'🚗 Z avtom';
-    return'<div class="wc"><div class="wc-top"><div><div class="wc-city">'+fl+he(t.city)+'</div><div class="wc-sub">'+he(t.country||'')+'</div></div><button class="wc-del" onclick="wlDel('+i+')"><i class="fas fa-times"></i></button></div><div class="wc-date"><i class="fas fa-plane-departure"></i>'+fmtDate(t.d1)+'</div><div class="wc-date"><i class="fas fa-plane-arrival"></i>'+fmtDate(t.d2)+'</div><div class="wc-meta">🌙 '+n+' noč'+(n===1?'':'i')+' · '+tr+'</div><button class="wc-load" onclick="wlLoad('+i+')"><i class="fas fa-search"></i> Naloži & Poišči</button></div>';
-  }).join('')+'</div>';
+  if(!wl.length){
+    c.innerHTML='<div class="wl-empty"><i class="fas fa-heart-broken"></i><p>Wish list je še prazen.<br>Poišči destinacijo in jo dodaj! ✈️</p></div>';
+    return;
+  }
+
+  // Razvrsti po celinah, znotraj vsake celine obdrži vrstni red dodajanja
+  var groups={};
+  wl.forEach(function(t,i){
+    var cont=getContinent(t.country_code);
+    if(!groups[cont]) groups[cont]=[];
+    groups[cont].push({t:t,i:i});
+  });
+
+  // Izpiši po celinah, sortirane po order
+  var contKeys=Object.keys(groups).sort(function(a,b){
+    return (CONT_META[a]||CONT_META['??']).order - (CONT_META[b]||CONT_META['??']).order;
+  });
+
+  var html='';
+  contKeys.forEach(function(cont){
+    var meta=CONT_META[cont]||CONT_META['??'];
+    var items=groups[cont];
+    html+='<div class="wl-continent">'
+      +'<div class="wl-cont-head"><span class="wl-cont-emoji">'+meta.emoji+'</span><span class="wl-cont-label">'+meta.label+'</span><span class="wl-cont-count">'+items.length+' potovanje'+(items.length>1?'':'')+'</span></div>'
+      +'<div class="wl-grid">'+items.map(function(x){ return buildWcCard(x.t,x.i); }).join('')+'</div>'
+      +'</div>';
+  });
+  c.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════
+//  NAŠA POTOVANJA — obiskane destinacije
+// ══════════════════════════════════════════════════
+var visited=[];
+try{visited=JSON.parse(localStorage.getItem('njp_visited')||'[]');}catch(_){}
+var visitedMapL=null;
+var visAcTimer=null,visAcData=[],visAcSelected=null;
+
+function saveVisited(){try{localStorage.setItem('njp_visited',JSON.stringify(visited));}catch(_){}}
+
+// ── Panel toggle ──────────────────────────────────
+function visPanel(){
+  $$('visBody').classList.toggle('open');
+  $$('visChev').classList.toggle('open');
+  if($$('visBody').classList.contains('open')){
+    renderVisited();
+    // Init map after panel opens (needs visible container)
+    setTimeout(initVisitedMap,200);
+  }
+}
+
+// ── Add form toggle ───────────────────────────────
+function visToggleForm(){
+  var f=$$('visAddForm');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+
+// ── Autocomplete for visited form ─────────────────
+$$('visCityIn') && $$('visCityIn').addEventListener('input',function(){
+  visAcSelected=null;
+  var q=this.value.trim();
+  clearTimeout(visAcTimer);
+  if(q.length<2){visAcHide();return;}
+  visAcTimer=setTimeout(function(){visAcFetch(q);},280);
+});
+function visAcFetch(q){
+  fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=7&language=sl&format=json',{},5000)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var res=d.results||[];
+      res.sort(function(a,b){return acScore(b,q)-acScore(a,q);}); // reuse main acScore
+      visAcData=res.slice(0,6);
+      visAcRender();
+    }).catch(function(){visAcHide();});
+}
+function visAcRender(){
+  var dd=$$('visAcDrop');if(!dd||!visAcData.length){visAcHide();return;}
+  dd.innerHTML=visAcData.map(function(r,i){
+    var cc=(r.country_code||'').toUpperCase();
+    var fl=cc?'<img src="https://flagcdn.com/20x15/'+cc.toLowerCase()+'.png" width="20" height="15">':'🌍';
+    var meta=[r.admin1,cName(cc)||r.country].filter(Boolean).join(', ');
+    return'<div class="ac-item" onclick="visAcSelect('+i+')">'
+      +'<div class="ac-flag">'+fl+'</div>'
+      +'<div><div class="ac-city">'+he(r.name)+'</div>'+(meta?'<div class="ac-meta">'+he(meta)+'</div>':'')+'</div></div>';
+  }).join('');
+  dd.classList.add('show');
+}
+function visAcHide(){var dd=$$('visAcDrop');if(dd){dd.classList.remove('show');dd.innerHTML='';}}
+function visAcSelect(i){
+  var r=visAcData[i];if(!r)return;
+  visAcSelected=r;
+  var cc=(r.country_code||'').toUpperCase();
+  $$('visCityIn').value=r.name+(r.country?' · '+cName(cc):'');
+  visAcHide();
+}
+document.addEventListener('click',function(e){
+  var w=$$('visAcWrap');if(w&&!w.contains(e.target))visAcHide();
+});
+
+// ── Save visited trip ─────────────────────────────
+function saveVisitedTrip(){
+  var d1=$$('visD1').value,d2=$$('visD2').value;
+  var spentEl=$$('visSpent'),spent=spentEl&&spentEl.value?parseFloat(spentEl.value)||0:0;
+  if(!d1||!d2){toast('Izberi datume','warn');return;}
+  if(d1>d2){toast('Datum odhoda mora biti pred prihodom','warn');return;}
+
+  var doSave=function(geo){
+    visited.unshift({
+      city:geo.name||'Neznano',country:geo.country||'',country_code:(geo.country_code||'').toUpperCase(),
+      lat:geo.latitude,lon:geo.longitude,d1:d1,d2:d2,spent:spent,
+      addedAt:new Date().toISOString()
+    });
+    saveVisited();
+    // Reset form
+    $$('visCityIn').value='';if($$('visSpent'))$$('visSpent').value='';
+    $$('visD1').value='';$$('visD2').value='';
+    visAcSelected=null;
+    visToggleForm();
+    renderVisited();
+    setTimeout(initVisitedMap,200);
+    toast('Potovanje dodano! ✅','ok');
+  };
+
+  if(visAcSelected){doSave(visAcSelected);}
+  else{
+    var city=$$('visCityIn').value.trim().split('·')[0].trim();
+    if(!city){toast('Vnesi destinacijo','warn');return;}
+    geocode(city).then(doSave).catch(function(){toast('Mesto ni najdeno','warn');});
+  }
+}
+
+// ── Move from wishlist to visited ────────────────
+function markVisitedFromWl(i){
+  var t=wl[i];
+  var spent=prompt('Koliko ste porabili na tem potovanju? (€)\nPusti prazno, če ne veš.','');
+  var spentVal=spent!==null?(parseFloat(spent)||0):0;
+  visited.unshift({
+    city:t.city,country:t.country,country_code:t.country_code,
+    lat:t.lat,lon:t.lon,d1:t.d1,d2:t.d2,spent:spentVal,
+    addedAt:new Date().toISOString()
+  });
+  saveVisited();
+  // Optionally remove from wishlist
+  wl.splice(i,1);
+  try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}
+  renderWl();wlUpdateBtn();
+  renderVisited();
+  setTimeout(initVisitedMap,200);
+  // Open visited panel
+  if(!$$('visBody').classList.contains('open')){
+    $$('visBody').classList.add('open');
+    $$('visChev').classList.add('open');
+  }
+  $$('vis-sec')&&$$('.vis-sec').scrollIntoView({behavior:'smooth'});
+  toast(t.city+' označen kot obiskan! ✅','ok');
+}
+
+function delVisited(i){
+  visited.splice(i,1);saveVisited();renderVisited();
+  if(visitedMapL) updateVisitedMapMarkers();
+  toast('Odstranjeno','info');
+}
+
+// ── Stats ─────────────────────────────────────────
+function getUniqueCountries(){var cc={};visited.forEach(function(v){if(v.country_code)cc[v.country_code]=true;});return Object.keys(cc).length;}
+function getTotalDays(){return visited.reduce(function(s,v){return s+nts(v.d1,v.d2);},0);}
+function getTotalSpent(){return visited.reduce(function(s,v){return s+(v.spent||0);},0);}
+
+// ── Render ────────────────────────────────────────
+function renderVisited(){
+  var countries=getUniqueCountries(),days=getTotalDays(),spent=getTotalSpent();
+  $$('visCount').textContent='Obiskanih destinacij: '+visited.length+(countries?' · '+countries+' držav':'');
+
+  // Stats strip
+  $$('visStatsStrip').innerHTML=
+    '<div class="vss"><div class="vss-val">'+countries+'</div><div class="vss-label">🌍 Držav</div></div>'
+    +'<div class="vss"><div class="vss-val">'+days+'</div><div class="vss-label">📅 Dni potovanj</div></div>'
+    +'<div class="vss"><div class="vss-val">'+(spent>0?fmtEur(spent):'—')+'</div><div class="vss-label">💰 Porabljeno</div></div>';
+
+  // European comparison
+  renderVisCompare(countries);
+
+  // List
+  var c=$$('visitedContent');
+  if(!visited.length){
+    c.innerHTML='<div class="vis-empty"><i class="fas fa-map-marked-alt"></i><p>Še niste dodali nobenih potovanj.<br>Kliknite "+ Dodaj potovanje" ali označite potovanje iz Wish Lista kot obiskano!</p></div>';
+    return;
+  }
+  c.innerHTML=visited.map(function(v,i){
+    var fl=v.country_code?'<img src="https://flagcdn.com/20x15/'+v.country_code.toLowerCase()+'.png" style="border-radius:2px">':'';
+    var n=nts(v.d1,v.d2);
+    return'<div class="vc-card">'
+      +'<div class="vc-check">✅</div>'
+      +'<div class="vc-info">'
+      +'<div class="vc-city-row">'+fl+'<span class="vc-city-name">'+he(v.city)+'</span>'
+      +(v.country?'<span style="font-size:12px;color:var(--text-muted)">'+he(v.country)+'</span>':'')+'</div>'
+      +'<div class="vc-meta-row">'
+      +'<span class="vc-tag"><i class="fas fa-calendar-alt" style="font-size:10px;margin-right:4px"></i>'+fmtDate(v.d1)+' – '+fmtDate(v.d2)+'</span>'
+      +(n?'<span class="vc-tag">🌙 '+n+' noči</span>':'')
+      +(v.spent?'<span class="vc-tag spent">💰 '+fmtEur(v.spent)+'</span>':'')
+      +'</div></div>'
+      +'<div class="vc-actions"><button class="btn-vc-del" onclick="delVisited('+i+')" title="Odstrani"><i class="fas fa-times"></i></button></div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderVisCompare(countries){
+  var cmp=$$('visCompare');
+  if(!cmp)return;
+  cmp.style.display='block';
+  // Statistics: European averages (vir: UNWTO, Eurostat, European Travel Commission)
+  var data=[
+    {name:'Ti in punca',val:countries,color:'var(--accent)',you:true},
+    {name:'Povp. Slovenec',val:11,color:'#8B85FF',you:false},
+    {name:'Povp. Evropejec',val:12,color:'var(--primary-light)',you:false},
+    {name:'Skandinavci',val:28,color:'#fbbf24',you:false},
+  ];
+  var maxVal=Math.max(28,countries);
+  var youMsg='';
+  if(countries===0)youMsg='Dodaj svoja potovanja in primerjaj!';
+  else if(countries<5)youMsg='Pred vama je še cel svet za odkrivanje! 🌏';
+  else if(countries<12)youMsg='Dobro napredujeta — kmalu do evropskega povprečja!';
+  else if(countries<20)youMsg='Nad evropskim povprečjem — pravi popotniki! 🎉';
+  else youMsg='Izjemni popotniki — v vrhu Evrope! 🏆';
+
+  cmp.innerHTML='<div class="vc-title"><i class="fas fa-chart-bar" style="color:var(--primary-light)"></i> Primerjava z Evropo</div>'
+    +data.map(function(d){
+      var pct=maxVal>0?Math.round(d.val/maxVal*100):0;
+      return'<div class="vc-row">'
+        +'<div class="vc-name'+(d.you?' vc-you':'')+'">'+d.name+'</div>'
+        +'<div class="vc-bar-wrap"><div class="vc-bar" style="width:'+pct+'%;background:'+d.color+'"></div></div>'
+        +'<div class="vc-num" style="color:'+d.color+'">'+d.val+'</div>'
+        +'</div>';
+    }).join('')
+    +'<div class="vc-note">'+youMsg+' · <em>Vir: <a href="https://www.unwto.org" target="_blank">UNWTO</a>, Eurostat, European Travel Commission · podatki za odrasle Evropejce</em></div>';
+}
+
+// ── Visited map (Leaflet) ─────────────────────────
+function initVisitedMap(){
+  var el=$$('visMapEl');
+  if(!el||!el.offsetHeight) return; // container not visible yet
+  if(visitedMapL){updateVisitedMapMarkers();return;}
+  visitedMapL=L.map('visMapEl',{center:[20,15],zoom:2,zoomControl:true,scrollWheelZoom:false,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(visitedMapL);
+  L.control.attribution({prefix:'© <a href="https://www.openstreetmap.org/copyright" style="color:#43C6AC">OSM</a> © <a href="https://carto.com/" style="color:#43C6AC">CARTO</a>'}).addTo(visitedMapL);
+  updateVisitedMapMarkers();
+}
+function updateVisitedMapMarkers(){
+  if(!visitedMapL)return;
+  visitedMapL.eachLayer(function(l){if(l instanceof L.Marker||l instanceof L.CircleMarker)visitedMapL.removeLayer(l);});
+  if(!visited.length){return;}
+  var icon=L.divIcon({
+    html:'<div style="width:28px;height:28px;background:linear-gradient(135deg,#43C6AC,#5bd8c3);border-radius:50%;border:3px solid rgba(255,255,255,.8);box-shadow:0 0 0 4px rgba(67,198,172,.3),0 4px 12px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:13px">✅</div>',
+    iconSize:[28,28],iconAnchor:[14,14],popupAnchor:[0,-16],className:''
+  });
+  var bounds=[];
+  visited.forEach(function(v){
+    if(!v.lat||!v.lon)return;
+    bounds.push([v.lat,v.lon]);
+    var pop='<div style="font-family:Inter,sans-serif;padding:2px">'
+      +'<div style="font-weight:700;font-size:13px;color:#FFFFFE">'+he(v.city)+'</div>'
+      +'<div style="font-size:11px;color:#A7A9BE;margin-top:2px">'+fmtDate(v.d1)+' – '+fmtDate(v.d2)+'</div>'
+      +(v.spent?'<div style="font-size:11px;color:#fbbf24;margin-top:2px">💰 '+fmtEur(v.spent)+'</div>':'')
+      +'</div>';
+    L.marker([v.lat,v.lon],{icon:icon}).addTo(visitedMapL).bindPopup(pop,{maxWidth:200});
+  });
+  if(bounds.length===1)visitedMapL.setView(bounds[0],6);
+  else if(bounds.length>1)visitedMapL.fitBounds(bounds,{padding:[30,30]});
 }
 
 // ── INIT ──────────────────────────────────────────
@@ -1217,6 +1859,11 @@ function renderWl(){
   $$('wlCount').textContent='Shranjenih potovanj: '+wl.length;
   $$('cityIn').addEventListener('input', acOnInput);
   $$('cityIn').addEventListener('keydown', acKeydown);
+  // Visited autocomplete
+  var vci=$$('visCityIn');
+  if(vci){vci.addEventListener('keydown',function(e){if(e.key==='Enter'&&visAcData.length)visAcSelect(0);else if(e.key==='Escape')visAcHide();});}
+  // Posodobi število na gumbu
+  renderVisited(); // samo stats strip + count, brez mape
 })();
 </script>
 </body>
