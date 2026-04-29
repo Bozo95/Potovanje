@@ -935,24 +935,59 @@ function recalcTotal(){
 
 // ── AUTOCOMPLETE ──────────────────────────────────
 var acTimer=null, acData=[], acIdx=-1;
+// Shranimo CELOTEN rezultat iz geocodinga ko ga izberemo iz dropdowna
+// → go() bo ga direktno uporabila brez ponovnega iskanja
+var acSelected=null;
 
 // Slovenian country names
-var CSL={'IT':'Italija','FR':'Francija','ES':'Španija','PT':'Portugalska','DE':'Nemčija','AT':'Avstrija','CH':'Švica','NL':'Nizozemska','BE':'Belgija','GR':'Grčija','HR':'Hrvaška','PL':'Poljska','CZ':'Češka','HU':'Madžarska','SK':'Slovaška','SI':'Slovenija','RS':'Srbija','ME':'Črna gora','AL':'Albanija','MK':'Sev. Makedonija','BG':'Bolgarija','RO':'Romunija','TR':'Turčija','GB':'Velika Britanija','IE':'Irska','DK':'Danska','SE':'Švedska','NO':'Norveška','FI':'Finska','EE':'Estonija','LV':'Latvija','LT':'Litva','LU':'Luksemburg','MT':'Malta','CY':'Ciper','IS':'Islandija','BA':'Bosna in Hercegovina','US':'ZDA','CA':'Kanada','MX':'Mehika','AU':'Avstralija','NZ':'Nova Zelandija','JP':'Japonska','CN':'Kitajska','KR':'J. Koreja','TH':'Tajska','ID':'Indonezija','SG':'Singapur','MY':'Malezija','HK':'Hongkong','AE':'ZAE','IL':'Izrael','EG':'Egipt','MA':'Maroko','TN':'Tunizija','UA':'Ukrajina','BR':'Brazilija','AR':'Argentina'};
+var CSL={'IT':'Italija','FR':'Francija','ES':'Španija','PT':'Portugalska','DE':'Nemčija','AT':'Avstrija','CH':'Švica','NL':'Nizozemska','BE':'Belgija','GR':'Grčija','HR':'Hrvaška','PL':'Poljska','CZ':'Češka','HU':'Madžarska','SK':'Slovaška','SI':'Slovenija','RS':'Srbija','ME':'Črna gora','AL':'Albanija','MK':'Sev. Makedonija','BG':'Bolgarija','RO':'Romunija','TR':'Turčija','GB':'Velika Britanija','IE':'Irska','DK':'Danska','SE':'Švedska','NO':'Norveška','FI':'Finska','EE':'Estonija','LV':'Latvija','LT':'Litva','LU':'Luksemburg','MT':'Malta','CY':'Ciper','IS':'Islandija','BA':'Bosna in Hercegovina','US':'ZDA','CA':'Kanada','MX':'Mehika','AU':'Avstralija','NZ':'Nova Zelandija','JP':'Japonska','CN':'Kitajska','KR':'J. Koreja','TH':'Tajska','ID':'Indonezija','SG':'Singapur','MY':'Malezija','HK':'Hongkong','AE':'ZAE','IL':'Izrael','EG':'Egipt','MA':'Maroko','TN':'Tunizija','UA':'Ukrajina','BR':'Brazilija','AR':'Argentina','LK':'Šrilanka','VN':'Vietnam','PH':'Filipini','IN':'Indija'};
 function cName(cc){return CSL[cc]||cc;}
 
-// Score: higher = better match. Prefers exact name match + European countries.
+// Znane turistične destinacije zunaj Evrope: ime → pričakovan country_code
+// Ko iskano ime točno ustreza TU, dobi velik bonus → Bali = Indonezija, ne Indija
+var TOURIST={
+  'bali':'ID','lombok':'ID','java':'ID','komodo':'ID','raja ampat':'ID',
+  'phuket':'TH','koh samui':'TH','chiang mai':'TH','krabi':'TH','pattaya':'TH',
+  'maldives':'MV','male':'MV',
+  'dubai':'AE','abu dhabi':'AE',
+  'singapore':'SG',
+  'hong kong':'HK',
+  'tokyo':'JP','kyoto':'JP','osaka':'JP',
+  'sydney':'AU','melbourne':'AU','cairns':'AU','gold coast':'AU',
+  'bali':'ID',
+  'marrakech':'MA','casablanca':'MA','fes':'MA',
+  'cancun':'MX','tulum':'MX','cabo san lucas':'MX',
+  'new york':'US','miami':'US','los angeles':'US','las vegas':'US','hawaii':'US',
+  'toronto':'CA','vancouver':'CA',
+  'rio de janeiro':'BR','sao paulo':'BR',
+  'cairo':'EG','luxor':'EG','hurghada':'EG','sharm el sheikh':'EG',
+  'nairobi':'KE','zanzibar':'TZ',
+  'seoul':'KR','busan':'KR',
+  'kuala lumpur':'MY','langkawi':'MY','penang':'MY',
+  'colombo':'LK','galle':'LK',
+  'hanoi':'VN','ho chi minh':'VN','da nang':'VN','hoi an':'VN',
+  'boracay':'PH','manila':'PH','palawan':'PH',
+};
+
+// Scoring: višje = boljše ujemanje
 var EURO=['IT','FR','ES','PT','DE','AT','CH','NL','BE','GR','HR','PL','CZ','HU','SK','SI','RS','ME','AL','MK','BG','RO','TR','GB','IE','DK','SE','NO','FI','EE','LV','LT','LU','MT','CY','IS','BA','MD','BY','UA','RU','LI','AD','MC','SM'];
 function acScore(r,q){
-  var s=0, name=(r.name||'').toLowerCase(), ql=q.toLowerCase();
-  if(name===ql)           s+=120;  // exact match (e.g. "Milano" == "Milano")
+  var s=0, name=(r.name||'').toLowerCase(), ql=q.toLowerCase(), cc=(r.country_code||'').toUpperCase();
+  // Ujemanje z iskano besedo
+  if(name===ql)             s+=120;
   else if(name.startsWith(ql)) s+=70;
-  else if(name.indexOf(ql)!==-1)   s+=35;
-  if(EURO.indexOf((r.country_code||'').toUpperCase())!==-1) s+=40; // European bonus
-  if(r.population) s+=Math.min(Math.log10(r.population+1)*6, 35); // bigger city = higher
+  else if(name.indexOf(ql)!==-1) s+=35;
+  // Turistična destinacija bonus (npr. Bali → Indonezija dobi +80, Bali v Indiji ne)
+  if(TOURIST[ql] && TOURIST[ql]===cc) s+=80;
+  // Evropski bonus (za Milano → Italija, ne Michigan)
+  if(EURO.indexOf(cc)!==-1) s+=30;
+  // Večje mesto = višje
+  if(r.population) s+=Math.min(Math.log10(r.population+1)*6, 30);
   return s;
 }
 
 function acOnInput(){
+  acSelected=null; // ob tipkanju počistimo cached izbiro
   var q=$$('cityIn').value.trim();
   acIdx=-1;
   clearTimeout(acTimer);
@@ -961,12 +996,10 @@ function acOnInput(){
 }
 
 function acFetch(q){
-  // Fetch more results (10) so sorting has enough candidates
   fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=10&language=sl&format=json',{},5000)
     .then(function(r){return r.json();})
     .then(function(d){
       var res=d.results||[];
-      // Sort by custom score: exact European match wins over US/remote cities
       res.sort(function(a,b){return acScore(b,q)-acScore(a,q);});
       acData=res.slice(0,7);
       acRender();
@@ -996,7 +1029,12 @@ function acSetIdx(i){acIdx=i;var items=$$('acDrop').querySelectorAll('.ac-item')
 
 function acSelect(i){
   var r=acData[i];if(!r)return;
-  $$('cityIn').value=r.name;
+  // Shranimo celoten geocoding rezultat → go() ga bo direktno uporabila
+  acSelected=r;
+  // Prikažemo "Mesto, Država" da je jasno kateri Bali smo izbrali
+  var cc=(r.country_code||'').toUpperCase();
+  var displayName=r.name+(r.country?' · '+cName(cc):'');
+  $$('cityIn').value=displayName;
   acHide();acIdx=-1;
 }
 
@@ -1088,7 +1126,14 @@ function go(){
   $$('costSec').style.display='none';
   selFlight=-1;selFlightCost=0;carTotal=0;
 
-  geocode(city).then(function(geo){
+  // Če je uporabnik izbral mesto iz dropdowna → uporabi cached rezultat direktno
+  // (prepreči problem: "Bali" → Indija namesto Indonezije)
+  var geoPromise = (acSelected && acSelected.name)
+    ? Promise.resolve(acSelected)
+    : geocode(city);
+  acSelected = null; // počistimo po uporabi
+
+  geoPromise.then(function(geo){
     var lat=geo.latitude,lon=geo.longitude,name=geo.name,country=geo.country||'',cc=geo.country_code||'',admin1=geo.admin1||'',n=nts(d1,d2);
     trip={city:name,country:country,country_code:cc,lat:lat,lon:lon,d1:d1,d2:d2,transport:transport};
 
