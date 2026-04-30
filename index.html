@@ -246,12 +246,23 @@
     .wc-meta{background:var(--surface3);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;margin-top:8px}
     .wc-del{background:rgba(255,101,132,.1);border:none;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--secondary);cursor:pointer;transition:all .2s;font-size:13px}
     .wc-del:hover{background:rgba(255,101,132,.2);transform:scale(1.1)}
-    .wc-load{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--primary-light);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;margin-top:10px}
-    .wc-load:hover{background:rgba(108,99,255,.2)}
-    .wc-cost{background:rgba(67,198,172,.07);border:1px solid rgba(67,198,172,.2);border-radius:10px;padding:9px 12px;margin-top:10px}
-    .wc-cost-total{font-size:14px;font-weight:700;color:var(--accent)}
-    .wc-cost-pp{font-size:12px;color:var(--text-muted);font-weight:400}
-    .wc-cost-parts{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.6}
+    /* Wishlist kartica — poenostavljena */
+    .wc-plan{background:linear-gradient(135deg,var(--secondary),#ff8fa3);border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:700;color:white;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;font-family:'Inter',sans-serif;width:100%;justify-content:center;margin-top:10px;box-shadow:0 3px 12px rgba(255,101,132,.25)}
+    .wc-plan:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,101,132,.35)}
+    /* Wishlist inline add form */
+    .wl-add-form{background:rgba(255,101,132,.07);border:1px solid rgba(255,101,132,.18);border-radius:14px;padding:16px 18px;margin-bottom:18px;display:none}
+    .wl-add-form.open{display:block}
+    .wl-add-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+    .wl-add-field{flex:1;min-width:180px;position:relative}
+    .wl-add-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);display:block;margin-bottom:6px}
+    .wl-add-field input{background:var(--surface2);border:1px solid rgba(255,101,132,.25);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;width:100%;transition:all .2s}
+    .wl-add-field input:focus{border-color:var(--secondary);box-shadow:0 0 0 3px rgba(255,101,132,.12)}
+    .wl-add-ac{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;z-index:300;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);display:none}
+    .wl-add-ac.show{display:block}
+    .btn-wl-dosave{background:linear-gradient(135deg,var(--secondary),#ff8fa3);border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:white;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;box-shadow:0 3px 10px rgba(255,101,132,.25)}
+    .btn-wl-dosave:hover{transform:translateY(-1px)}
+    .btn-wl-head-add{background:rgba(255,101,132,.15);border:1px solid rgba(255,101,132,.3);border-radius:10px;padding:8px 16px;font-size:13px;font-weight:700;color:var(--secondary);cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all .2s}
+    .btn-wl-head-add:hover{background:rgba(255,101,132,.25)}
 
     .toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;box-shadow:var(--shadow);z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
     .toast.show{transform:translateY(0);opacity:1}
@@ -646,10 +657,26 @@
 
   <div class="wl-sec">
     <div class="wl-head" onclick="wlPanel()">
-      <div class="wl-hl"><div class="wl-ico">💝</div><div><h2>Wish List</h2><p id="wlCount">Shranjenih potovanj: 0</p></div></div>
-      <div class="wl-chev" id="wlChev"><i class="fas fa-chevron-down"></i></div>
+      <div class="wl-hl"><div class="wl-ico">💝</div><div><h2>Wish List</h2><p id="wlCount">Sanjskih destinacij: 0</p></div></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn-wl-head-add" onclick="event.stopPropagation();wlOpenAdd()"><i class="fas fa-plus"></i> Dodaj mesto</button>
+        <div class="wl-chev" id="wlChev"><i class="fas fa-chevron-down"></i></div>
+      </div>
     </div>
-    <div class="wl-body" id="wlBody"><div id="wlContent"></div></div>
+    <div class="wl-body" id="wlBody">
+      <!-- Inline add form -->
+      <div class="wl-add-form" id="wlAddForm">
+        <div class="wl-add-row">
+          <div class="wl-add-field" id="wlAcWrap">
+            <label><i class="fas fa-map-marker-alt" style="color:var(--secondary);margin-right:4px"></i>Kam bi rada šla?</label>
+            <input type="text" id="wlCityIn" placeholder="npr. Kyoto, Maldivi, New York…" autocomplete="off">
+            <div class="wl-add-ac" id="wlAcDrop"></div>
+          </div>
+          <button class="btn-wl-dosave" onclick="wlDirectAdd()"><i class="fas fa-heart"></i> Dodaj na seznam</button>
+        </div>
+      </div>
+      <div id="wlContent"></div>
+    </div>
   </div>
   <!-- NAŠA POTOVANJA -->
   <div class="vis-sec">
@@ -1472,46 +1499,120 @@ function goHome(){
 }
 
 // ── WISHLIST ──────────────────────────────────────
-function inWl(){return trip&&wl.some(function(t){return t.city===trip.city&&t.d1===trip.d1&&t.d2===trip.d2;});}
+function saveWl(){try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}}
+
+// Wishlist vsebuje samo mesto+država+koordinate — brez datumov in stroškov
+function inWl(){return trip&&wl.some(function(t){return t.city===trip.city;});}
 function wlUpdateBtn(){var b=$$('wlBtn');if(inWl()){b.className='btn-wl saved';b.innerHTML='<i class="fas fa-check"></i> Na Wish Listu!';}else{b.className='btn-wl';b.innerHTML='<i class="fas fa-heart"></i> Dodaj na Wish List';}}
+
 function wlToggle(){
   if(!trip)return;
-  if(inWl()){wl=wl.filter(function(t){return!(t.city===trip.city&&t.d1===trip.d1&&t.d2===trip.d2);});toast('Odstranjeno','info');}
-  else{
-    // Shrani tudi trenutne vnose stroškovnika
-    var _ap=$$('accomPrice'),_dp=$$('dayBudget');
-    var costs={
-      accomPN: _ap&&_ap.value ? parseFloat(_ap.value)||0 : 0,
-      dayPP:   _dp&&_dp.value ? parseFloat(_dp.value)||0 : 0,
-      sFlIdx:  selFlight,
-      sFlCost: selFlightCost,
-      carTot:  carTotal
-    };
-    wl.unshift(Object.assign({},trip,{addedAt:new Date().toISOString(),costs:costs}));
-    toast(trip.city+' dodano! 💝','ok');
+  if(inWl()){
+    wl=wl.filter(function(t){return t.city!==trip.city;});
+    toast('Odstranjeno z Wish Lista','info');
+  }else{
+    // Shrani samo lokacijo — brez datumov in stroškov
+    wl.unshift({city:trip.city,country:trip.country,country_code:trip.country_code,lat:trip.lat,lon:trip.lon,addedAt:new Date().toISOString()});
+    toast(trip.city+' dodan na Wish List! 💝','ok');
     if(!$$('wlBody').classList.contains('open'))wlPanel();
   }
-  try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}
-  wlUpdateBtn();renderWl();
+  saveWl();wlUpdateBtn();renderWl();
 }
-function wlDel(i){wl.splice(i,1);try{localStorage.setItem('njp_wl',JSON.stringify(wl));}catch(_){}renderWl();wlUpdateBtn();toast('Odstranjeno','info');}
+
+function wlDel(i){wl.splice(i,1);saveWl();renderWl();wlUpdateBtn();toast('Odstranjeno','info');}
+
+// Klik na "Načrtuj potovanje" — zapolni samo mesto, datume nastavi na privzeto
+// Uporabnik sam izbere datume in klikne Išči
 function wlLoad(i){
   var t=wl[i];
-  $$('cityIn').value=t.city;
-  $$('d1').value=t.d1;
-  $$('d2').value=t.d2;
-  if(t.transport){
-    transport=t.transport;
-    var tr=$$('tTog');
-    tr.classList.toggle('car',transport==='car');
-    tr.classList.toggle('plane',transport==='plane');
-  }
-  // Nastavi stroške za obnovo po iskanju
-  if(t.costs) pendingCostRestore=t.costs;
+  // Nastavi cached geocoding result da bo šlo direktno na pravo lokacijo
+  acSelected={name:t.city,country:t.country,country_code:t.country_code,latitude:t.lat,longitude:t.lon};
+  $$('cityIn').value=t.city+(t.country?' · '+he(cName(t.country_code)):'' );
+  // Datume pusti na privzetih (naslednji mesec)
+  var today=new Date();
+  var d1=new Date(today);d1.setMonth(today.getMonth()+1);
+  var d2=new Date(d1);d2.setDate(d1.getDate()+5);
+  $$('d1').value=d1.toISOString().slice(0,10);
+  $$('d2').value=d2.toISOString().slice(0,10);
   window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(go,400);
+  setTimeout(function(){$$('d1').focus();},500);
+  toast('Izberita datume in kliknita Išči! 📅','info');
 }
-function wlPanel(){$$('wlBody').classList.toggle('open');$$('wlChev').classList.toggle('open');if($$('wlBody').classList.contains('open'))renderWl();}
+
+function wlPanel(){
+  $$('wlBody').classList.toggle('open');
+  $$('wlChev').classList.toggle('open');
+  if($$('wlBody').classList.contains('open'))renderWl();
+}
+
+// Inline add form toggle
+function wlOpenAdd(){
+  var f=$$('wlAddForm');
+  if(f.classList.toggle('open')&&!$$('wlBody').classList.contains('open'))wlPanel();
+  if(f.classList.contains('open'))setTimeout(function(){$$('wlCityIn').focus();},100);
+}
+
+// Wishlist inline autocomplete
+var wlAcTimer=null,wlAcData=[],wlAcSelected=null;
+function wlAcInit(){
+  var inp=$$('wlCityIn');if(!inp)return;
+  inp.addEventListener('input',function(){
+    wlAcSelected=null;
+    var q=this.value.trim();
+    clearTimeout(wlAcTimer);
+    if(q.length<2){wlAcHide();return;}
+    wlAcTimer=setTimeout(function(){
+      fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(q)+'&count=7&language=sl&format=json',{},5000)
+        .then(function(r){return r.json();})
+        .then(function(d){
+          wlAcData=(d.results||[]).sort(function(a,b){return acScore(b,q)-acScore(a,q);}).slice(0,6);
+          var dd=$$('wlAcDrop');if(!dd)return;
+          if(!wlAcData.length){wlAcHide();return;}
+          dd.innerHTML=wlAcData.map(function(r,i){
+            var cc=(r.country_code||'').toUpperCase();
+            var fl=cc?'<img src="https://flagcdn.com/20x15/'+cc.toLowerCase()+'.png" width="20" height="15">':'🌍';
+            var meta=[r.admin1,cName(cc)||r.country].filter(Boolean).join(', ');
+            return'<div class="ac-item" onclick="wlAcSelect('+i+')">'
+              +'<div class="ac-flag">'+fl+'</div>'
+              +'<div><div class="ac-city">'+he(r.name)+'</div>'+(meta?'<div class="ac-meta">'+he(meta)+'</div>':'')+'</div></div>';
+          }).join('');
+          dd.classList.add('show');
+        }).catch(function(){wlAcHide();});
+    },280);
+  });
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&wlAcData.length){wlAcSelect(0);}
+    else if(e.key==='Escape'){wlAcHide();}
+  });
+}
+function wlAcHide(){var dd=$$('wlAcDrop');if(dd){dd.classList.remove('show');dd.innerHTML='';}}
+function wlAcSelect(i){
+  var r=wlAcData[i];if(!r)return;
+  wlAcSelected=r;
+  var cc=(r.country_code||'').toUpperCase();
+  $$('wlCityIn').value=r.name+(r.country?' · '+cName(cc):'');
+  wlAcHide();
+}
+document.addEventListener('click',function(e){
+  var w=$$('wlAcWrap');if(w&&!w.contains(e.target))wlAcHide();
+});
+
+function wlDirectAdd(){
+  var doAdd=function(geo){
+    // Preveri da ga ni že na seznamu
+    if(wl.some(function(t){return t.city===geo.name;})){toast(geo.name+' je že na Wish Listu!','info');return;}
+    wl.unshift({city:geo.name,country:geo.country||'',country_code:(geo.country_code||'').toUpperCase(),lat:geo.latitude,lon:geo.longitude,addedAt:new Date().toISOString()});
+    saveWl();renderWl();
+    $$('wlCityIn').value='';wlAcSelected=null;
+    toast(geo.name+' dodan! 💝','ok');
+  };
+  if(wlAcSelected){doAdd(wlAcSelected);}
+  else{
+    var city=$$('wlCityIn').value.trim().split('·')[0].trim();
+    if(!city){toast('Vnesi ime mesta','warn');return;}
+    geocode(city).then(doAdd).catch(function(){toast('Mesto ni najdeno','warn');});
+  }
+}
 // ── CELINSKO RAZVRŠČANJE ──────────────────────────
 var CC_CONT={
   // Evropa
@@ -1549,40 +1650,28 @@ var CONT_META={
 function getContinent(cc){ return CC_CONT[(cc||'').toUpperCase()]||'??'; }
 
 function buildWcCard(t,i){
-  var n=nts(t.d1,t.d2);
-  var fl=t.country_code?'<img src="https://flagcdn.com/20x15/'+t.country_code.toLowerCase()+'.png" style="border-radius:2px;vertical-align:middle"> ':'';
-  var tr=t.transport==='plane'?'✈️ Z letalom':'🚗 Z avtom';
-  var grand=0,costParts=[];
-  if(t.costs){
-    var _c=t.costs;
-    if(t.transport==='plane'&&_c.sFlCost>0){grand+=_c.sFlCost*2; costParts.push('✈️ '+fmtEur(_c.sFlCost*2));}
-    if(t.transport==='car'&&_c.carTot>0)   {grand+=_c.carTot;    costParts.push('🚗 '+fmtEur(_c.carTot));}
-    if(_c.accomPN){grand+=_c.accomPN*n; costParts.push('🏨 '+fmtEur(_c.accomPN*n));}
-    if(_c.dayPP)  {grand+=_c.dayPP*n*2; costParts.push('🍽️ '+fmtEur(_c.dayPP*n*2));}
-  }
-  var costRow=grand>0
-    ?'<div class="wc-cost">'
-      +'<div class="wc-cost-total">💰 Skupaj ~'+fmtEur(grand)+'<span class="wc-cost-pp"> · '+fmtEur(grand/2)+'/os</span></div>'
-      +(costParts.length?'<div class="wc-cost-parts">'+costParts.join(' · ')+'</div>':'')
-      +'</div>'
-    :'';
+  var fl=t.country_code?'<img src="https://flagcdn.com/20x15/'+t.country_code.toLowerCase()+'.png" style="border-radius:3px;vertical-align:middle;margin-right:6px">':'';
+  var added=t.addedAt?new Date(t.addedAt).toLocaleDateString('sl-SI',{day:'numeric',month:'long',year:'numeric'}):'';
   return'<div class="wc">'
-    +'<div class="wc-top"><div><div class="wc-city">'+fl+he(t.city)+'</div><div class="wc-sub">'+he(t.country||'')+'</div></div>'
-    +'<button class="wc-del" onclick="wlDel('+i+')"><i class="fas fa-times"></i></button></div>'
-    +'<div class="wc-date"><i class="fas fa-plane-departure"></i>'+fmtDate(t.d1)+'</div>'
-    +'<div class="wc-date"><i class="fas fa-plane-arrival"></i>'+fmtDate(t.d2)+'</div>'
-    +'<div class="wc-meta">🌙 '+n+' noč'+(n===1?'':'i')+' · '+tr+'</div>'
-    +costRow
-    +'<button class="wc-load" onclick="wlLoad('+i+')"><i class="fas fa-search"></i> Naloži & Poišči</button>'
+    +'<div class="wc-top">'
+    +'<div><div class="wc-city">'+fl+he(t.city)+'</div>'
+    +(t.country?'<div class="wc-sub">'+he(t.country)+'</div>':'')
+    +(added?'<div class="wc-sub" style="margin-top:3px;font-size:11px;opacity:.6">Dodano: '+added+'</div>':'')
+    +'</div>'
+    +'<button class="wc-del" onclick="wlDel('+i+')"><i class="fas fa-times"></i></button>'
+    +'</div>'
+    +'<button class="wc-plan" onclick="wlLoad('+i+')">'
+    +'<i class="fas fa-map-marked-alt"></i> Načrtuj potovanje →'
+    +'</button>'
     +'<button class="btn-wc-vis" onclick="markVisitedFromWl('+i+')"><i class="fas fa-check"></i> Označil sem kot obiskano</button>'
     +'</div>';
 }
 
 function renderWl(){
-  $$('wlCount').textContent='Shranjenih potovanj: '+wl.length;
+  $$('wlCount').textContent='Sanjskih destinacij: '+wl.length;
   var c=$$('wlContent');
   if(!wl.length){
-    c.innerHTML='<div class="wl-empty"><i class="fas fa-heart-broken"></i><p>Wish list je še prazen.<br>Poišči destinacijo in jo dodaj! ✈️</p></div>';
+    c.innerHTML='<div class="wl-empty"><i class="fas fa-heart-broken"></i><p>Wish list je še prazen.<br>Dodaj mesta ki bi jih rada obiskala! 💝</p></div>';
     return;
   }
 
@@ -1793,7 +1882,7 @@ function renderVisCompare(countries){
   cmp.style.display='block';
   // Statistics: European averages (vir: UNWTO, Eurostat, European Travel Commission)
   var data=[
-    {name:'Ti in punca',val:countries,color:'var(--accent)',you:true},
+    {name:'Anja in Božidar',val:countries,color:'var(--accent)',you:true},
     {name:'Povp. Slovenec',val:11,color:'#8B85FF',you:false},
     {name:'Povp. Evropejec',val:12,color:'var(--primary-light)',you:false},
     {name:'Skandinavci',val:28,color:'#fbbf24',you:false},
@@ -1859,6 +1948,8 @@ function updateVisitedMapMarkers(){
   $$('wlCount').textContent='Shranjenih potovanj: '+wl.length;
   $$('cityIn').addEventListener('input', acOnInput);
   $$('cityIn').addEventListener('keydown', acKeydown);
+  // Wishlist inline add autocomplete
+  wlAcInit();
   // Visited autocomplete
   var vci=$$('visCityIn');
   if(vci){vci.addEventListener('keydown',function(e){if(e.key==='Enter'&&visAcData.length)visAcSelect(0);else if(e.key==='Escape')visAcHide();});}
